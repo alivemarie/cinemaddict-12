@@ -38,7 +38,7 @@ const generateComment = () => {
     text: getRandomItem(COMMENT_TEXT),
     emoji: getRandomItem(COMMENT_EMOJI),
     author: getRandomItem(COMMENT_AUTHOR),
-    commentDate: randomDate(new Date(2012, 0, 1), new Date())
+    date: randomDate(new Date(2012, 0, 1), new Date())
   };
 };
 

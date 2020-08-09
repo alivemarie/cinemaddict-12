@@ -10,6 +10,7 @@ import {createFilmDetailsTemplate} from "./view/film-details";
 import {render} from "./view/dom-utils.js";
 // import {createLoadingBarTemplate} from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
+import {getRandomInteger} from "./utils";
 
 const FILMS_COUNT = {
   ALL_MOVIES: 15,
@@ -56,4 +57,4 @@ const footer = document.querySelector(`footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
 
 render(footer, createFilmDetailsTemplate(allMovies[0]), `afterend`);
-render(footerStatistics, createFooterStatisticsTemplate(), `afterbegin`);
+render(footerStatistics, createFooterStatisticsTemplate(getRandomInteger(100000, 200000)), `afterbegin`);
