@@ -12,7 +12,7 @@ import {render} from "./view/dom-utils.js";
 import {generateFilmDetails} from "./mock/film";
 
 const FILMS_COUNT = {
-  ALL_MOVIES: 5,
+  ALL_MOVIES: 15,
   EXTRA_MOVIES: 2,
 };
 const allMovies = new Array(FILMS_COUNT.ALL_MOVIES).fill().map(generateFilmDetails);

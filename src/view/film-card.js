@@ -1,4 +1,4 @@
-import {showYearFromDate, showShortDescription} from "../utils";
+import {showYearFromDate} from "../utils";
 const MAIN_GENRE = 0;
 export const createFilmCardTemplate = (film) => {
   const {
@@ -9,8 +9,12 @@ export const createFilmCardTemplate = (film) => {
     duration,
     genres,
     description,
-    comments
+    comments,
+    isAddedToWatchlist,
+    isMarkedAsWatched,
+    isFavorite
   } = film;
+  const filmControlItemActiveClass = `film-card__controls-item--active`;
   return `<article class="film-card">
           <h3 class="film-card__title">${title}</h3>
           <p class="film-card__rating">${rating}</p>
@@ -23,9 +27,9 @@ export const createFilmCardTemplate = (film) => {
           <p class="film-card__description">${description.length > 140 ? description.slice(0, 140) + `...` : description}</p>
           <a class="film-card__comments">${comments.length + ` comments`}</a>
           <form class="film-card__controls">
-            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist">Add to watchlist</button>
-            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched">Mark as watched</button>
-            <button class="film-card__controls-item button film-card__controls-item--favorite">Mark as favorite</button>
+            <button class="film-card__controls-item button film-card__controls-item--add-to-watchlist ${isAddedToWatchlist ? filmControlItemActiveClass : ``}">Add to watchlist</button>
+            <button class="film-card__controls-item button film-card__controls-item--mark-as-watched ${isMarkedAsWatched ? filmControlItemActiveClass : ``}">Mark as watched</button>
+            <button class="film-card__controls-item button film-card__controls-item--favorite ${isFavorite ? filmControlItemActiveClass : ``}">Mark as favorite</button>
           </form>
         </article>`;
 };

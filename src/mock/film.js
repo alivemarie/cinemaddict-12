@@ -58,7 +58,9 @@ export const generateFilmDetails = () => {
   const releaseDate = randomDate(new Date(1960, 0, 1), new Date());
   const commentNumber = getRandomInteger(COMMENTS.min, COMMENTS.max);
   const comments = new Array(commentNumber).fill().map(generateComment);
-
+  const isAddedToWatchlist = Boolean(getRandomInteger(0, 1));
+  const isMarkedAsWatched = Boolean(getRandomInteger(0, 1));
+  const isFavorite = Boolean(getRandomInteger(0, 1));
   return {
     title,
     titleOriginal,
@@ -73,7 +75,10 @@ export const generateFilmDetails = () => {
     genres,
     description,
     ageRating,
-    comments
+    comments,
+    isAddedToWatchlist,
+    isMarkedAsWatched,
+    isFavorite
   };
 };
 

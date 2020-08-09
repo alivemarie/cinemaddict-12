@@ -13,7 +13,4 @@ const showFullReleaseDate = (date) => {
   return date.toLocaleString(`en-GB`, {day: `numeric`, month: `long`, year: `numeric`});
 };
 
-const showShortDescription = (description) => {
-  return description.slice(0, 140);
-};
-export {getRandomInteger, showYearFromDate, showFullReleaseDate, showShortDescription};
+export {getRandomInteger, showYearFromDate, showFullReleaseDate};
