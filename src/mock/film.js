@@ -14,7 +14,10 @@ import {
   FILM_GENRE,
   COUNTRIES
 } from "../consts";
-
+const COMMENTS = {
+  min: 2,
+  max: 5
+};
 const randomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
@@ -23,11 +26,11 @@ const getRandomItem = (items) => {
   return items[getRandomInteger(0, items.length - 1)];
 };
 
-const getFewRandomItems = (items, max, separator) => {
+const getFewRandomItems = (items, max) => {
   const randomIndex = getRandomInteger(1, max);
   const randomItems = items.slice().sort(() => Math.random() - 0.5);
   randomItems.splice(randomIndex, randomItems.length - randomIndex);
-  return randomItems.join(separator);
+  return randomItems;
 };
 
 const generateComment = () => {
@@ -48,12 +51,12 @@ export const generateFilmDetails = () => {
   const director = getRandomItem(FILM_DIRECTORS);
   const country = getRandomItem(COUNTRIES);
   const ageRating = getRandomItem(AGE_RATINGS);
-  const writers = getFewRandomItems(SCREENWRITERS, 3, `, `);
-  const actors = getFewRandomItems(ACTORS, 5, `, `);
-  const genres = getFewRandomItems(FILM_GENRE, 3, ` `);
-  const description = getFewRandomItems(DESCRIPTION, 5, ` `);
+  const writers = getFewRandomItems(SCREENWRITERS, 3).join(`, `);
+  const actors = getFewRandomItems(ACTORS, 5).join(`, `);
+  const genres = getFewRandomItems(FILM_GENRE, 3);
+  const description = getFewRandomItems(DESCRIPTION, 5).join(` `);
   const releaseDate = randomDate(new Date(1960, 0, 1), new Date());
-  const commentNumber = getRandomInteger(1, 5);
+  const commentNumber = getRandomInteger(COMMENTS.min, COMMENTS.max);
   const comments = new Array(commentNumber).fill().map(generateComment);
 
   return {

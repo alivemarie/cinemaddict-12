@@ -6,11 +6,11 @@ import {createFilmCardTemplate} from "./view/film-card.js";
 import {createExtraFilmsListTemplate} from "./view/extra-films-list.js";
 import {createShowMoreButtonTemplate} from "./view/show-more-button.js";
 import {createFooterStatisticsTemplate} from "./view/footer-statistics.js";
-import {createFilmDetailsTemplate} from "./view/film-details";
+// import {createFilmDetailsTemplate} from "./view/film-details";
 import {render} from "./view/dom-utils.js";
 // import {createLoadingBarTemplate} from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
-import {showYearFromDate, showFullReleaseDate} from "./utils";
+
 const FILMS_COUNT = {
   ALL_MOVIES: 5,
   EXTRA_MOVIES: 2,
@@ -42,17 +42,18 @@ fillFilmsContainer(allFilmsListContainerElement, FILMS_COUNT.ALL_MOVIES, allMovi
 
 render(allFilmsListContainerElement, createShowMoreButtonTemplate(), `afterend`);
 
+const extraMovies = new Array(FILMS_COUNT.EXTRA_MOVIES).fill().map(generateFilmDetails);
 render(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.TOP_RATED));
 render(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.MOST_COMMENTED));
 
 const topRatedFilmsContainerElement = filmsElement.lastElementChild.previousElementSibling.querySelector(`.films-list__container`);
 const mostCommentedFilmsContainerElement = filmsElement.lastElementChild.querySelector(`.films-list__container`);
 
-fillFilmsContainer(topRatedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES);
-fillFilmsContainer(mostCommentedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES);
+fillFilmsContainer(topRatedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES, extraMovies);
+fillFilmsContainer(mostCommentedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES, extraMovies);
 
 const footer = document.querySelector(`footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
 
-render(footer, createFilmDetailsTemplate(), `afterend`);
+// render(footer, createFilmDetailsTemplate(), `afterend`);
 render(footerStatistics, createFooterStatisticsTemplate(), `afterbegin`);
