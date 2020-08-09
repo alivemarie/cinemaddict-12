@@ -11,9 +11,10 @@ import {render} from "./view/dom-utils.js";
 // import {createLoadingBarTemplate} from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
 import {getRandomInteger} from "./utils";
+import {getUserRating} from "./mock/user";
 
 const FILMS_COUNT = {
-  ALL_MOVIES: 15,
+  ALL_MOVIES: 25,
   EXTRA_MOVIES: 2,
 };
 const allMovies = new Array(FILMS_COUNT.ALL_MOVIES).fill().map(generateFilmDetails);
@@ -30,7 +31,8 @@ const fillFilmsContainer = (container, quantity, films) => {
 };
 
 const siteHeaderElement = document.querySelector(`header`);
-render(siteHeaderElement, createProfileRatingTemplate());
+const userRating = getUserRating(allMovies);
+render(siteHeaderElement, createProfileRatingTemplate(userRating));
 
 const siteMainElement = document.querySelector(`main`);
 render(siteMainElement, createNavigationTemplate());
