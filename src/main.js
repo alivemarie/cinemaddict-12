@@ -6,7 +6,7 @@ import {createFilmCardTemplate} from "./view/film-card.js";
 import {createExtraFilmsListTemplate} from "./view/extra-films-list.js";
 import {createShowMoreButtonTemplate} from "./view/show-more-button.js";
 import {createFooterStatisticsTemplate} from "./view/footer-statistics.js";
-// import {createFilmDetailsTemplate} from "./view/film-details";
+import {createFilmDetailsTemplate} from "./view/film-details";
 import {render} from "./view/dom-utils.js";
 // import {createLoadingBarTemplate} from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
@@ -55,5 +55,5 @@ fillFilmsContainer(mostCommentedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES,
 const footer = document.querySelector(`footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
 
-// render(footer, createFilmDetailsTemplate(), `afterend`);
+render(footer, createFilmDetailsTemplate(allMovies[0]), `afterend`);
 render(footerStatistics, createFooterStatisticsTemplate(), `afterbegin`);
