@@ -12,6 +12,7 @@ import {render} from "./view/dom-utils.js";
 import {generateFilmDetails} from "./mock/film";
 import {getRandomInteger} from "./utils";
 import {getUserRating} from "./mock/user";
+import {generateFilter} from "./mock/filter";
 
 const FILMS_COUNT = {
   ALL_MOVIES: 25,
@@ -24,6 +25,8 @@ const EXTRA_FILMS = {
   MOST_COMMENTED: `Most commented`,
 };
 
+const filters = generateFilter(allMovies);
+
 const fillFilmsContainer = (container, quantity, films) => {
   for (let i = 0; i < quantity; i++) {
     render(container, createFilmCardTemplate(films[i]));
@@ -35,7 +38,8 @@ const userRating = getUserRating(allMovies);
 render(siteHeaderElement, createProfileRatingTemplate(userRating));
 
 const siteMainElement = document.querySelector(`main`);
-render(siteMainElement, createNavigationTemplate());
+console.log(filters);
+render(siteMainElement, createNavigationTemplate(filters));
 render(siteMainElement, createSortingTemplate());
 render(siteMainElement, createFilmsListTemplate());
 
