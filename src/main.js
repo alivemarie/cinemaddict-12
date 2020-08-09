@@ -9,20 +9,22 @@ import {createFooterStatisticsTemplate} from "./view/footer-statistics.js";
 import {createFilmDetailsTemplate} from "./view/film-details";
 import {render} from "./view/dom-utils.js";
 // import {createLoadingBarTemplate} from "./view/loading-bar.js";
-
+import {generateFilmDetails} from "./mock/film";
+import {showYearFromDate, showFullReleaseDate} from "./utils";
 const FILMS_COUNT = {
   ALL_MOVIES: 5,
   EXTRA_MOVIES: 2,
 };
+const allMovies = new Array(FILMS_COUNT.ALL_MOVIES).fill().map(generateFilmDetails);
 
 const EXTRA_FILMS = {
   TOP_RATED: `Top rated`,
   MOST_COMMENTED: `Most commented`,
 };
 
-const fillFilmsContainer = (container, quantity) => {
+const fillFilmsContainer = (container, quantity, films) => {
   for (let i = 0; i < quantity; i++) {
-    render(container, createFilmCardTemplate());
+    render(container, createFilmCardTemplate(films[i]));
   }
 };
 
@@ -36,7 +38,7 @@ render(siteMainElement, createFilmsListTemplate());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 const allFilmsListContainerElement = filmsElement.querySelector(`.films-list__container`);
-fillFilmsContainer(allFilmsListContainerElement, FILMS_COUNT.ALL_MOVIES);
+fillFilmsContainer(allFilmsListContainerElement, FILMS_COUNT.ALL_MOVIES, allMovies);
 
 render(allFilmsListContainerElement, createShowMoreButtonTemplate(), `afterend`);
 
