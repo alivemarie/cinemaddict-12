@@ -71,7 +71,6 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
   });
 }
 
-const extraMovies = new Array(FILMS_COUNT.EXTRA_MOVIES).fill().map(generateFilmDetails);
 render(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.TOP_RATED));
 render(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.MOST_COMMENTED));
 
