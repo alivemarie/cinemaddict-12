@@ -14,9 +14,14 @@ import {
   FILM_GENRE,
   COUNTRIES
 } from "../consts";
+
+const MAX_WRITERS = 3;
+const MAX_ACTORS = 5;
+const MAX_GENRES = 3;
+const MAX_DESCRIPTIONS = 5;
 const COMMENTS = {
   min: 2,
-  max: 5
+  max: 15
 };
 const randomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
@@ -51,10 +56,10 @@ export const generateFilmDetails = () => {
   const director = getRandomItem(FILM_DIRECTORS);
   const country = getRandomItem(COUNTRIES);
   const ageRating = getRandomItem(AGE_RATINGS);
-  const writers = getFewRandomItems(SCREENWRITERS, 3).join(`, `);
-  const actors = getFewRandomItems(ACTORS, 5).join(`, `);
-  const genres = getFewRandomItems(FILM_GENRE, 3);
-  const description = getFewRandomItems(DESCRIPTION, 5).join(` `);
+  const writers = getFewRandomItems(SCREENWRITERS, MAX_WRITERS).join(`, `);
+  const actors = getFewRandomItems(ACTORS, MAX_ACTORS).join(`, `);
+  const genres = getFewRandomItems(FILM_GENRE, MAX_GENRES);
+  const description = getFewRandomItems(DESCRIPTION, MAX_DESCRIPTIONS).join(` `);
   const releaseDate = randomDate(new Date(1960, 0, 1), new Date());
   const commentNumber = getRandomInteger(COMMENTS.min, COMMENTS.max);
   const comments = new Array(commentNumber).fill().map(generateComment);
