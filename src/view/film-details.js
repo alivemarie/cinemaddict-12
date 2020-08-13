@@ -65,12 +65,12 @@ const createFilmDetailsTable = (film) => {
           </table>`;
 };
 
-const createFilmDetailsControls = (film) => {
-  const {
-    isAddedToWatchlist,
-    isMarkedAsWatched,
-    isFavorite
-  } = film;
+const createFilmDetailsControls = ({
+  isAddedToWatchlist,
+  isMarkedAsWatched,
+  isFavorite
+}) => {
+
   return `<section class="film-details__controls">
         <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isAddedToWatchlist ? `checked` : ``}>
         <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>

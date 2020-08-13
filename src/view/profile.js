@@ -1,24 +1,25 @@
+const USER_RATING_TITLE = {
+  noTitle: {
+    title: ``,
+    max: 0
+  },
+  low: {
+    title: `Novice`,
+    min: 1,
+    max: 10
+  },
+  middle: {
+    title: `Fan`,
+    min: 11,
+    max: 20
+  },
+  high: {
+    title: `Movie Buff`,
+    min: 21
+  }
+};
+
 const matchRatingWithRank = (rating) => {
-  const USER_RATING_TITLE = {
-    noTitle: {
-      title: ``,
-      max: 0
-    },
-    low: {
-      title: `Novice`,
-      min: 1,
-      max: 10
-    },
-    middle: {
-      title: `Fan`,
-      min: 11,
-      max: 20
-    },
-    high: {
-      title: `Movie Buff`,
-      min: 21
-    }
-  };
 
   let ratingTitle;
 
