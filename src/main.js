@@ -89,5 +89,5 @@ if (topRated.length > 0) {
 const footer = document.querySelector(`footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
 
-// render(footer, createFilmDetailsTemplate(allMovies[0]), `afterend`);
+render(footer, createFilmDetailsTemplate(allMovies[0]), `afterend`);
 render(footerStatistics, createFooterStatisticsTemplate(getRandomInteger(100000, 200000)), `afterbegin`);
