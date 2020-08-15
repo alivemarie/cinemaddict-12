@@ -1,16 +1,15 @@
 import {createProfileRatingTemplate} from "./view/profile.js";
 import {createNavigationTemplate} from "./view/navigation.js";
-import {createSortingTemplate} from "./view/sorting.js";
+import SortView from "./view/sort.js";
 import {createFilmsListTemplate} from "./view/films-list.js";
 import {createFilmCardTemplate} from "./view/film-card.js";
 import {createExtraFilmsListTemplate} from "./view/extra-films-list.js";
 import {createShowMoreButtonTemplate} from "./view/show-more-button.js";
 import {createFooterStatisticsTemplate} from "./view/footer-statistics.js";
 import {createFilmDetailsTemplate} from "./view/film-details";
-import {render} from "./view/dom-utils.js";
 // import {createLoadingBarTemplate} from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
-import {getRandomInteger} from "./utils";
+import {getRandomInteger, renderTemplate, renderElement, RenderPosition} from "./utils";
 import {getUserRating} from "./mock/user";
 import {generateFilter} from "./mock/filter";
 import {getTopCommentedFilms, getTopRatedFilms} from "./mock/extra-films";
@@ -30,20 +29,21 @@ const EXTRA_FILMS = {
 };
 
 const filters = generateFilter(allMovies);
+
 const fillFilmsContainer = (container, quantity, films) => {
   for (let i = 0; i < quantity; i++) {
-    render(container, createFilmCardTemplate(films[i]));
+    renderTemplate(container, createFilmCardTemplate(films[i]));
   }
 };
 
 const siteHeaderElement = document.querySelector(`header`);
 const userRating = getUserRating(allMovies);
-render(siteHeaderElement, createProfileRatingTemplate(userRating));
+renderTemplate(siteHeaderElement, createProfileRatingTemplate(userRating));
 
 const siteMainElement = document.querySelector(`main`);
-render(siteMainElement, createNavigationTemplate(filters));
-render(siteMainElement, createSortingTemplate());
-render(siteMainElement, createFilmsListTemplate());
+renderTemplate(siteMainElement, createNavigationTemplate(filters));
+renderElement(siteMainElement, new SortView().getElement());
+renderTemplate(siteMainElement, createFilmsListTemplate());
 
 const filmsElement = siteMainElement.querySelector(`.films`);
 const allFilmsListContainerElement = filmsElement.querySelector(`.films-list__container`);
@@ -53,7 +53,7 @@ fillFilmsContainer(allFilmsListContainerElement, renderNumber, allMovies);
 if (allMovies.length > FILM_COUNT_PER_STEP) {
   let renderedFilmsCount = FILM_COUNT_PER_STEP;
 
-  render(allFilmsListContainerElement, createShowMoreButtonTemplate(), `afterend`);
+  renderTemplate(allFilmsListContainerElement, createShowMoreButtonTemplate(), `afterend`);
 
   const showMoreButton = filmsElement.querySelector(`.films-list__show-more`);
 
@@ -61,7 +61,7 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
     evt.preventDefault();
     allMovies
       .slice(renderedFilmsCount, renderedFilmsCount + FILM_COUNT_PER_STEP)
-      .forEach((film) => render(allFilmsListContainerElement, createFilmCardTemplate(film)));
+      .forEach((film) => renderTemplate(allFilmsListContainerElement, createFilmCardTemplate(film)));
 
     renderedFilmsCount += FILM_COUNT_PER_STEP;
 
@@ -71,8 +71,8 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
   });
 }
 
-render(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.TOP_RATED));
-render(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.MOST_COMMENTED));
+renderTemplate(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.TOP_RATED));
+renderTemplate(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.MOST_COMMENTED));
 
 const topCommented = getTopCommentedFilms(allMovies);
 if (topCommented.length > 0) {
@@ -89,5 +89,5 @@ if (topRated.length > 0) {
 const footer = document.querySelector(`footer`);
 const footerStatistics = footer.querySelector(`.footer__statistics`);
 
-render(footer, createFilmDetailsTemplate(allMovies[0]), `afterend`);
-render(footerStatistics, createFooterStatisticsTemplate(getRandomInteger(100000, 200000)), `afterbegin`);
+// renderTemplate(footer, createFilmDetailsTemplate(allMovies[0]), `afterend`);
+renderTemplate(footerStatistics, createFooterStatisticsTemplate(getRandomInteger(100000, 200000)), `afterbegin`);
