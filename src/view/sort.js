@@ -21,7 +21,6 @@ export default class Sort {
     if (!this._element) {
       this._element = createElement(this.getTemplate());
     }
-    console.log(`getelement`, this._element);
     return this._element;
   }
 

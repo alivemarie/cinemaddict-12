@@ -30,7 +30,6 @@ const renderElement = (container, element, place = RenderPosition.BEFOREEND) => 
 };
 
 const renderTemplate = (container, template, place = `beforeend`) => {
-  console.log(`render`, template);
   container.insertAdjacentHTML(place, template);
 };
 
