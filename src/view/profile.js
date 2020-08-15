@@ -1,3 +1,6 @@
+import {createElement} from "../utils";
+
+const TEST_USER_RATING = 15;
 const USER_RATING_TITLE = {
   noTitle: {
     title: ``,
@@ -40,9 +43,31 @@ const matchRatingWithRank = (rating) => {
   return ratingTitle;
 };
 
-export const createProfileRatingTemplate = (userRating) => {
+const createProfileRatingTemplate = (userRating) => {
   return `<section class="header__profile profile">
  ${userRating > 0 ? `<p class="profile__rating">${matchRatingWithRank(userRating)}</p>` : `` }
 <img class="profile__avatar" src="images/bitmap@2x.png" alt="Avatar" width="35" height="35">
 </section>`;
 };
+
+export default class Profile {
+  constructor(userRating = TEST_USER_RATING) {
+    this._userRating = userRating;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createProfileRatingTemplate(this._userRating);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+
+  removeElement() {
+    this._element = null;
+  }
+}

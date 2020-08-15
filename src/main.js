@@ -1,4 +1,4 @@
-import {createProfileRatingTemplate} from "./view/profile.js";
+import ProfileView from "./view/profile.js";
 import {createNavigationTemplate} from "./view/navigation.js";
 import SortView from "./view/sort.js";
 import FilmsListView from "./view/films-list.js";
@@ -38,7 +38,7 @@ const fillFilmsContainer = (container, quantity, films) => {
 
 const siteHeaderElement = document.querySelector(`header`);
 const userRating = getUserRating(allMovies);
-renderTemplate(siteHeaderElement, createProfileRatingTemplate(userRating));
+renderElement(siteHeaderElement, new ProfileView(userRating).getElement());
 
 const siteMainElement = document.querySelector(`main`);
 renderTemplate(siteMainElement, createNavigationTemplate(filters));
