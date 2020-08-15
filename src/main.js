@@ -2,8 +2,8 @@ import ProfileView from "./view/profile.js";
 import {createNavigationTemplate} from "./view/navigation.js";
 import SortView from "./view/sort.js";
 import FilmsListView from "./view/films-list.js";
-import {createFilmCardTemplate} from "./view/film-card.js";
-import {createExtraFilmsListTemplate} from "./view/extra-films-list.js";
+import FilmCardView from "./view/film-card.js";
+import ExtraFilmsListView from "./view/extra-films-list.js";
 import ShowMoreButtonView from "./view/show-more-button.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import {createFilmDetailsTemplate} from "./view/film-details";
@@ -32,7 +32,7 @@ const filters = generateFilter(allMovies);
 
 const fillFilmsContainer = (container, quantity, films) => {
   for (let i = 0; i < quantity; i++) {
-    renderTemplate(container, createFilmCardTemplate(films[i]));
+    renderElement(container, new FilmCardView(films[i]).getElement());
   }
 };
 
@@ -71,8 +71,8 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
   });
 }
 
-renderTemplate(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.TOP_RATED));
-renderTemplate(filmsElement, createExtraFilmsListTemplate(EXTRA_FILMS.MOST_COMMENTED));
+renderElement(filmsElement, new ExtraFilmsListView(EXTRA_FILMS.TOP_RATED).getElement());
+renderElement(filmsElement, new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED).getElement());
 
 const topCommented = getTopCommentedFilms(allMovies);
 if (topCommented.length > 0) {

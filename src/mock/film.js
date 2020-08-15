@@ -38,7 +38,7 @@ const getFewRandomItems = (items, max) => {
   return randomItems;
 };
 
-const generateComment = () => {
+export const generateComment = () => {
   return {
     text: getRandomItem(COMMENT_TEXT),
     emoji: getRandomItem(COMMENT_EMOJI),
