@@ -18,7 +18,7 @@ const RenderPosition = {
   BEFOREEND: `beforeend`
 };
 
-const renderElement = (container, element, place = RenderPosition.BEFOREEND) => {
+const render = (container, element, place = RenderPosition.BEFOREEND) => {
   switch (place) {
     case RenderPosition.AFTERBEGIN:
       container.prepend(element);
@@ -40,4 +40,4 @@ const createElement = (template) => {
   return newElement.firstChild; // 3
 };
 
-export {getRandomInteger, showYearFromDate, showFullReleaseDate, renderTemplate, RenderPosition, renderElement, createElement};
+export {getRandomInteger, showYearFromDate, showFullReleaseDate, renderTemplate, RenderPosition, render, createElement};
