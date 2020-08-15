@@ -7,15 +7,16 @@ import ExtraFilmsListView from "./view/extra-films-list.js";
 import ShowMoreButtonView from "./view/show-more-button.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import FilmDetailsView from "./view/film-details";
+import NoFilmsView from "./view/no-films";
 // import LoadingBarView from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
-import {getRandomInteger, render, RenderPosition} from "./utils";
+import {render, RenderPosition} from "./utils";
 import {getUserRating} from "./mock/user";
 import {generateFilter} from "./mock/filter";
 import {getTopCommentedFilms, getTopRatedFilms} from "./mock/extra-films";
 const bodyElement = document.querySelector(`body`);
 const FILMS_COUNT = {
-  ALL_MOVIES: 25,
+  ALL_MOVIES: 0,
   EXTRA_MOVIES: 2,
 };
 
@@ -73,7 +74,14 @@ render(siteHeaderElement, new ProfileView(userRating).getElement());
 const siteMainElement = document.querySelector(`main`);
 render(siteMainElement, new NavigationView(filters).getElement());
 render(siteMainElement, new SortView().getElement());
-const filmsListComponent = new FilmsListView();
+
+let filmsListComponent;
+if (allMovies.length === 0) {
+  filmsListComponent = new NoFilmsView();
+} else {
+  filmsListComponent = new FilmsListView();
+}
+
 render(siteMainElement, filmsListComponent.getElement());
 
 const allFilmsListContainerElement = filmsListComponent.getElement().querySelector(`.films-list__container`);
@@ -100,21 +108,19 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
   });
 }
 
-render(filmsListComponent.getElement(), new ExtraFilmsListView(EXTRA_FILMS.TOP_RATED).getElement());
-render(filmsListComponent.getElement(), new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED).getElement());
-
 const topCommented = getTopCommentedFilms(allMovies);
 if (topCommented.length > 0) {
+  render(filmsListComponent.getElement(), new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED).getElement());
   const mostCommentedFilmsContainerElement = filmsListComponent.getElement().lastElementChild.querySelector(`.films-list__container`);
   fillFilmsContainer(mostCommentedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES, topCommented);
 }
 
 const topRated = getTopRatedFilms(allMovies);
 if (topRated.length > 0) {
-  const topRatedFilmsContainerElement = filmsListComponent.getElement().lastElementChild.previousElementSibling.querySelector(`.films-list__container`);
+  render(filmsListComponent.getElement(), new ExtraFilmsListView(EXTRA_FILMS.TOP_RATED).getElement());
+  const topRatedFilmsContainerElement = filmsListComponent.getElement().lastElementChild.querySelector(`.films-list__container`);
   fillFilmsContainer(topRatedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES, topRated);
 }
 
 const footerStatistics = document.querySelector(`.footer__statistics`);
-
-render(footerStatistics, new FooterStatisticsView(getRandomInteger(100000, 200000)).getElement(), RenderPosition.AFTERBEGIN);
+render(footerStatistics, new FooterStatisticsView(allMovies.length).getElement(), RenderPosition.AFTERBEGIN);
