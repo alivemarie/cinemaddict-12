@@ -8,7 +8,6 @@ import ShowMoreButtonView from "./view/show-more-button.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import FilmDetailsView from "./view/film-details";
 import NoFilmsView from "./view/no-films";
-// import LoadingBarView from "./view/loading-bar.js";
 import {generateFilmDetails} from "./mock/film";
 import {render, RenderPosition} from "./utils";
 import {getUserRating} from "./mock/user";
