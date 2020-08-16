@@ -1,4 +1,25 @@
-import {showFullReleaseDate} from "../utils";
+import {showFullReleaseDate, createElement} from "../utils";
+import {generateComment} from "../mock/film";
+const TEST_COMMENTS = new Array(3).fill().map(generateComment);
+
+const TEST_FILM_DETAILS = {
+  title: `TEST`,
+  titleOriginal: `TEST`,
+  poster: `./images/posters/made-for-each-other.png`,
+  rating: `6+`,
+  director: `Anthony Mann`,
+  writers: `Billy Wilder`,
+  actors: `Adam Sandler`,
+  country: `USA`,
+  releaseDate: new Date(),
+  duration: `1h 55m`,
+  genres: [`Action`, `Comedy`, `Cartoon`],
+  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  comments: TEST_COMMENTS,
+  isAddedToWatchlist: false,
+  isMarkedAsWatched: false,
+  isFavorite: false
+};
 
 const createFilmInfoHead = (film) => {
   const {
@@ -82,6 +103,7 @@ const createFilmDetailsControls = ({
         <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
       </section>`;
 };
+
 const createFilmDetailsCommentsList = (comments) => {
 
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
@@ -137,7 +159,7 @@ const createAddingCommentField = () => {
         </div>`;
 };
 
-export const createFilmDetailsTemplate = (film) => {
+const createFilmDetailsTemplate = (film) => {
   const {
     poster,
     description,
@@ -183,3 +205,22 @@ export const createFilmDetailsTemplate = (film) => {
   </form>
 </section>`;
 };
+
+export default class FilmDetails {
+  constructor(filmDetails = TEST_FILM_DETAILS) {
+    this._filmDetails = filmDetails;
+    this._element = null;
+  }
+  getTemplate() {
+    return createFilmDetailsTemplate(this._filmDetails);
+  }
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}

@@ -1,6 +1,23 @@
-import {showYearFromDate} from "../utils";
+import {showYearFromDate, createElement} from "../utils";
+import {generateComment} from "../mock/film";
 const MAIN_GENRE = 0;
-export const createFilmCardTemplate = (film) => {
+const TEST_COMMENTS = new Array(3).fill().map(generateComment);
+
+const TEST_FILM = {
+  title: `TEST`,
+  poster: `./images/posters/made-for-each-other.png`,
+  rating: `6+`,
+  releaseDate: new Date(),
+  duration: `1h 55m`,
+  genres: [`Action`, `Comedy`, `Cartoon`],
+  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
+  comments: TEST_COMMENTS,
+  isAddedToWatchlist: false,
+  isMarkedAsWatched: false,
+  isFavorite: false
+};
+
+const createFilmCardTemplate = (film) => {
   const {
     title,
     poster,
@@ -33,3 +50,24 @@ export const createFilmCardTemplate = (film) => {
           </form>
         </article>`;
 };
+
+export default class FilmCard {
+  constructor(film = TEST_FILM) {
+    this._film = film;
+    this._element = null;
+  }
+
+  getTemplate() {
+    return createFilmCardTemplate(this._film);
+  }
+
+  getElement() {
+    if (!this._element) {
+      this._element = createElement(this.getTemplate());
+    }
+    return this._element;
+  }
+  removeElement() {
+    this._element = null;
+  }
+}
