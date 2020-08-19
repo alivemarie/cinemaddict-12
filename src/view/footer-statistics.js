@@ -1,4 +1,6 @@
 import {createElement} from "../utils";
+import AbstractView from "./abstract";
+
 const TEST_NUMBER = 150000;
 
 const createFooterStatisticsTemplate = (number) => {

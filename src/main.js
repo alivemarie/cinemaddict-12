@@ -15,7 +15,7 @@ import {generateFilter} from "./mock/filter";
 import {getTopCommentedFilms, getTopRatedFilms} from "./mock/extra-films";
 const bodyElement = document.querySelector(`body`);
 const FILMS_COUNT = {
-  ALL_MOVIES: 0,
+  ALL_MOVIES: 10,
   EXTRA_MOVIES: 2,
 };
 
