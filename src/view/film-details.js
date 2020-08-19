@@ -1,5 +1,6 @@
-import {showFullReleaseDate, createElement} from "../utils";
+import {showFullReleaseDate} from "../utils";
 import {generateComment} from "../mock/film";
+import AbstractView from "./abstract";
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
@@ -206,21 +207,12 @@ const createFilmDetailsTemplate = (film) => {
 </section>`;
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractView {
   constructor(filmDetails = TEST_FILM_DETAILS) {
+    super();
     this._filmDetails = filmDetails;
-    this._element = null;
   }
   getTemplate() {
     return createFilmDetailsTemplate(this._filmDetails);
-  }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }

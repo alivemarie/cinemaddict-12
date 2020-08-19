@@ -1,5 +1,6 @@
-import {showYearFromDate, createElement} from "../utils";
+import {showYearFromDate} from "../utils";
 import {generateComment} from "../mock/film";
+import AbstractView from "./abstract";
 const MAIN_GENRE = 0;
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
@@ -51,23 +52,13 @@ const createFilmCardTemplate = (film) => {
         </article>`;
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film = TEST_FILM) {
+    super();
     this._film = film;
-    this._element = null;
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
-  }
-
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
-  }
-  removeElement() {
-    this._element = null;
   }
 }
