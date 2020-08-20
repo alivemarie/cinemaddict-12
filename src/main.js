@@ -15,7 +15,7 @@ import {generateFilter} from "./mock/filter";
 import {getTopCommentedFilms, getTopRatedFilms} from "./mock/extra-films";
 const bodyElement = document.querySelector(`body`);
 const FILMS_COUNT = {
-  ALL_MOVIES: 10,
+  ALL_MOVIES: 30,
   EXTRA_MOVIES: 2,
 };
 
@@ -92,8 +92,7 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
   let renderedFilmsCount = FILM_COUNT_PER_STEP;
   const showMoreButtonComponent = new ShowMoreButtonView();
   render(filmsListComponent.getElement(), showMoreButtonComponent.getElement());
-  showMoreButtonComponent.getElement().addEventListener(`click`, (evt) => {
-    evt.preventDefault();
+  showMoreButtonComponent.setClickHandler(() => {
     allMovies
       .slice(renderedFilmsCount, renderedFilmsCount + FILM_COUNT_PER_STEP)
       .forEach((film) => renderFilm(allFilmsListContainerElement, film));
