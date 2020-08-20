@@ -33,29 +33,22 @@ const renderFilm = (container, film) => {
   const filmComponent = new FilmCardView(film);
   const filmDetailsComponent = new FilmDetailsView(film);
 
-  const closeDetailsButton = filmDetailsComponent.getElement().querySelector(`.film-details__close-btn`);
-
-  const onClickShowFilmDetails = () => {
-    render(bodyElement, filmDetailsComponent.getElement());
-    document.addEventListener(`keydown`, onEscKeyDown);
-  };
-
-  const onClickCloseFilmDetails = () => {
-    filmDetailsComponent.getElement().remove();
-  };
-
   const onEscKeyDown = (evt) => {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      onClickCloseFilmDetails();
+      filmDetailsComponent.getElement().remove();
       document.removeEventListener(`keydown`, onEscKeyDown);
     }
   };
 
-  filmComponent.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, onClickShowFilmDetails);
-  filmComponent.getElement().querySelector(`.film-card__title`).addEventListener(`click`, onClickShowFilmDetails);
-  filmComponent.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, onClickShowFilmDetails);
-  closeDetailsButton.addEventListener(`click`, onClickCloseFilmDetails);
+  filmComponent.setFilmCommentsClickHandler(() => {
+    render(bodyElement, filmDetailsComponent.getElement());
+    document.addEventListener(`keydown`, onEscKeyDown);
+  });
+
+  filmDetailsComponent.setCloseButtonClickHandler(() => {
+    filmDetailsComponent.getElement().remove();
+  });
 
   render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
 };

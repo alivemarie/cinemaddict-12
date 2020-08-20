@@ -56,9 +56,22 @@ export default class FilmCard extends AbstractView {
   constructor(film = TEST_FILM) {
     super();
     this._film = film;
+    this._filmCommentsClickHandler = this._filmCommentsClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
+  }
+
+  _filmCommentsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
+  }
+
+  setFilmCommentsClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._filmCommentsClickHandler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._filmCommentsClickHandler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._filmCommentsClickHandler);
   }
 }
