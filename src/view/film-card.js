@@ -1,4 +1,4 @@
-import {showYearFromDate} from "../utils";
+import {showYearFromDate} from "../utils/film";
 import {generateComment} from "../mock/film";
 import AbstractView from "./abstract";
 const MAIN_GENRE = 0;

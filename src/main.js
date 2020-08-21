@@ -7,12 +7,12 @@ import ExtraFilmsListView from "./view/extra-films-list.js";
 import ShowMoreButtonView from "./view/show-more-button.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import FilmDetailsView from "./view/film-details";
-import NoFilmsView from "./view/no-films";
-import {generateFilmDetails} from "./mock/film";
-import {render, RenderPosition} from "./utils";
-import {getUserRating} from "./mock/user";
-import {generateFilter} from "./mock/filter";
-import {getTopCommentedFilms, getTopRatedFilms} from "./mock/extra-films";
+import NoFilmsView from "./view/no-films.js";
+import {generateFilmDetails} from "./mock/film.js";
+import {render, RenderPosition} from "./utils/render.js";
+import {getUserRating} from "./mock/user.js";
+import {generateFilter} from "./mock/filter.js";
+import {getTopCommentedFilms, getTopRatedFilms} from "./mock/extra-films.js";
 const bodyElement = document.querySelector(`body`);
 const FILMS_COUNT = {
   ALL_MOVIES: 30,
@@ -42,7 +42,7 @@ const renderFilm = (container, film) => {
   };
 
   filmComponent.setFilmCommentsClickHandler(() => {
-    render(bodyElement, filmDetailsComponent.getElement());
+    render(bodyElement, filmDetailsComponent);
     document.addEventListener(`keydown`, onEscKeyDown);
   });
 
@@ -50,7 +50,7 @@ const renderFilm = (container, film) => {
     filmDetailsComponent.getElement().remove();
   });
 
-  render(container, filmComponent.getElement(), RenderPosition.BEFOREEND);
+  render(container, filmComponent);
 };
 
 const fillFilmsContainer = (container, quantity, films) => {
@@ -61,11 +61,11 @@ const fillFilmsContainer = (container, quantity, films) => {
 
 const siteHeaderElement = document.querySelector(`header`);
 const userRating = getUserRating(allMovies);
-render(siteHeaderElement, new ProfileView(userRating).getElement());
+render(siteHeaderElement, new ProfileView(userRating));
 
 const siteMainElement = document.querySelector(`main`);
-render(siteMainElement, new NavigationView(filters).getElement());
-render(siteMainElement, new SortView().getElement());
+render(siteMainElement, new NavigationView(filters));
+render(siteMainElement, new SortView());
 
 let filmsListComponent;
 if (allMovies.length === 0) {
@@ -74,7 +74,7 @@ if (allMovies.length === 0) {
   filmsListComponent = new FilmsListView();
 }
 
-render(siteMainElement, filmsListComponent.getElement());
+render(siteMainElement, filmsListComponent);
 
 const allFilmsListContainerElement = filmsListComponent.getElement().querySelector(`.films-list__container`);
 const renderNumber = Math.min(allMovies.length, FILM_COUNT_PER_STEP);
@@ -84,7 +84,7 @@ fillFilmsContainer(allFilmsListContainerElement, renderNumber, allMovies);
 if (allMovies.length > FILM_COUNT_PER_STEP) {
   let renderedFilmsCount = FILM_COUNT_PER_STEP;
   const showMoreButtonComponent = new ShowMoreButtonView();
-  render(filmsListComponent.getElement(), showMoreButtonComponent.getElement());
+  render(filmsListComponent, showMoreButtonComponent);
   showMoreButtonComponent.setClickHandler(() => {
     allMovies
       .slice(renderedFilmsCount, renderedFilmsCount + FILM_COUNT_PER_STEP)
@@ -101,17 +101,17 @@ if (allMovies.length > FILM_COUNT_PER_STEP) {
 
 const topCommented = getTopCommentedFilms(allMovies);
 if (topCommented.length > 0) {
-  render(filmsListComponent.getElement(), new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED).getElement());
+  render(filmsListComponent, new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED));
   const mostCommentedFilmsContainerElement = filmsListComponent.getElement().lastElementChild.querySelector(`.films-list__container`);
   fillFilmsContainer(mostCommentedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES, topCommented);
 }
 
 const topRated = getTopRatedFilms(allMovies);
 if (topRated.length > 0) {
-  render(filmsListComponent.getElement(), new ExtraFilmsListView(EXTRA_FILMS.TOP_RATED).getElement());
+  render(filmsListComponent, new ExtraFilmsListView(EXTRA_FILMS.TOP_RATED));
   const topRatedFilmsContainerElement = filmsListComponent.getElement().lastElementChild.querySelector(`.films-list__container`);
   fillFilmsContainer(topRatedFilmsContainerElement, FILMS_COUNT.EXTRA_MOVIES, topRated);
 }
 
 const footerStatistics = document.querySelector(`.footer__statistics`);
-render(footerStatistics, new FooterStatisticsView(allMovies.length).getElement(), RenderPosition.AFTERBEGIN);
+render(footerStatistics, new FooterStatisticsView(allMovies.length), RenderPosition.AFTERBEGIN);

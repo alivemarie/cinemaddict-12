@@ -1,6 +1,6 @@
-import {showFullReleaseDate} from "../utils";
-import {generateComment} from "../mock/film";
-import AbstractView from "./abstract";
+import {showFullReleaseDate} from "../utils/film.js";
+import {generateComment} from "../mock/film.js";
+import AbstractView from "./abstract.js";
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
