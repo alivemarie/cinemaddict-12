@@ -33,4 +33,4 @@ const createElement = (template) => {
   return newElement.firstChild;
 };
 
-export {render, RenderPosition, createElement};
+export {render, RenderPosition, createElement, renderTemplate};
