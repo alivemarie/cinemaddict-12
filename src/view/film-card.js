@@ -1,5 +1,6 @@
-import {showYearFromDate, createElement} from "../utils";
+import {showYearFromDate} from "../utils/film";
 import {generateComment} from "../mock/film";
+import AbstractView from "./abstract";
 const MAIN_GENRE = 0;
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
@@ -51,23 +52,26 @@ const createFilmCardTemplate = (film) => {
         </article>`;
 };
 
-export default class FilmCard {
+export default class FilmCard extends AbstractView {
   constructor(film = TEST_FILM) {
+    super();
     this._film = film;
-    this._element = null;
+    this._filmCommentsClickHandler = this._filmCommentsClickHandler.bind(this);
   }
 
   getTemplate() {
     return createFilmCardTemplate(this._film);
   }
 
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _filmCommentsClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
-  removeElement() {
-    this._element = null;
+
+  setFilmCommentsClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-card__poster`).addEventListener(`click`, this._filmCommentsClickHandler);
+    this.getElement().querySelector(`.film-card__title`).addEventListener(`click`, this._filmCommentsClickHandler);
+    this.getElement().querySelector(`.film-card__comments`).addEventListener(`click`, this._filmCommentsClickHandler);
   }
 }

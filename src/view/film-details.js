@@ -1,5 +1,6 @@
-import {showFullReleaseDate, createElement} from "../utils";
-import {generateComment} from "../mock/film";
+import {showFullReleaseDate} from "../utils/film.js";
+import {generateComment} from "../mock/film.js";
+import AbstractView from "./abstract.js";
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
@@ -206,21 +207,21 @@ const createFilmDetailsTemplate = (film) => {
 </section>`;
 };
 
-export default class FilmDetails {
+export default class FilmDetails extends AbstractView {
   constructor(filmDetails = TEST_FILM_DETAILS) {
+    super();
     this._filmDetails = filmDetails;
-    this._element = null;
+    this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
   }
   getTemplate() {
     return createFilmDetailsTemplate(this._filmDetails);
   }
-  getElement() {
-    if (!this._element) {
-      this._element = createElement(this.getTemplate());
-    }
-    return this._element;
+  _closeButtonClickHandler(evt) {
+    evt.preventDefault();
+    this._callback.click();
   }
-  removeElement() {
-    this._element = null;
+  setCloseButtonClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
   }
 }
