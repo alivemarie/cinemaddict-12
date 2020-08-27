@@ -3,7 +3,7 @@ import FooterStatisticsView from "./view/footer-statistics.js";
 import {generateFilmDetails} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {getUserRating} from "./mock/user.js";
-import MovieListPresenter from "./presenter/filmlist";
+import MovieListPresenter from "./presenter/filmlist.js";
 const FILMS_COUNT = {
   ALL_MOVIES: 30,
   EXTRA_MOVIES: 2,
