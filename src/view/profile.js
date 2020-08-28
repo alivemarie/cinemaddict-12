@@ -1,4 +1,4 @@
-import AbstractView from "./abstractComponent";
+import AbstractComponentView from "./abstract-component.js";
 
 const TEST_USER_RATING = 15;
 const USER_RATING_TITLE = {
@@ -50,7 +50,7 @@ const createProfileRatingTemplate = (userRating) => {
 </section>`;
 };
 
-export default class Profile extends AbstractView {
+export default class Profile extends AbstractComponentView {
   constructor(userRating = TEST_USER_RATING) {
     super();
     this._userRating = userRating;

@@ -1,6 +1,6 @@
 import {showYearFromDate} from "../utils/film.js";
 import {generateComment} from "../mock/film.js";
-import AbstractView from "./abstractComponent.js";
+import AbstractComponentView from "./abstract-component.js";
 const MAIN_GENRE = 0;
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
@@ -52,7 +52,7 @@ const createFilmCardTemplate = (film) => {
         </article>`;
 };
 
-export default class FilmCard extends AbstractView {
+export default class FilmCard extends AbstractComponentView {
   constructor(film = TEST_FILM) {
     super();
     this._film = film;

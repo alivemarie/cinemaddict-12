@@ -1,10 +1,10 @@
-import AbstractView from "./abstractComponent";
+import AbstractComponentView from "./abstract-component.js";
 
 const createShowMoreButtonTemplate = () => {
   return `<button class="films-list__show-more">Show more</button>`;
 };
 
-export default class ShowMoreButton extends AbstractView {
+export default class ShowMoreButton extends AbstractComponentView {
   constructor() {
     super();
     this._clickHandler = this._clickHandler.bind(this);
