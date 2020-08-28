@@ -1,15 +1,14 @@
 import SortView from "../view/sort.js";
 import FilmsListView from "../view/films-list.js";
-import FilmCardView from "../view/film-card.js";
 import ExtraFilmsListView from "../view/extra-films-list.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
-import FilmDetailsView from "../view/film-details";
 import NoFilmsView from "../view/no-films.js";
 import {render, remove} from "../utils/render.js";
 import NavigationView from "../view/navigation";
 import {generateFilter} from "../mock/filter";
 import {getTopCommentedFilms, getTopRatedFilms} from "../mock/extra-films";
 import {SortType} from '../consts.js';
+import FilmCardPresenter from "./film-card";
 const FILM_COUNT_PER_STEP = 5;
 const FILMS_COUNT = {
   ALL_MOVIES: 30,
@@ -20,7 +19,7 @@ const EXTRA_FILMS = {
   MOST_COMMENTED: `Most commented`,
 };
 
-export default class MovieList {
+export default class FilmsList {
   constructor(mainContainer) {
     this._mainContainer = mainContainer;
     this._showMoreButtonComponent = new ShowMoreButtonView();
@@ -92,28 +91,8 @@ export default class MovieList {
   }
 
   _renderFilmCard(container, film) {
-    const bodyElement = document.querySelector(`body`);
-    const filmCardComponent = new FilmCardView(film);
-    const filmDetailsComponent = new FilmDetailsView(film);
-
-    const onEscKeyDown = (evt) => {
-      if (evt.key === `Escape` || evt.key === `Esc`) {
-        evt.preventDefault();
-        filmDetailsComponent.getElement().remove();
-        document.removeEventListener(`keydown`, onEscKeyDown);
-      }
-    };
-
-    filmCardComponent.setFilmCommentsClickHandler(() => {
-      render(bodyElement, filmDetailsComponent);
-      document.addEventListener(`keydown`, onEscKeyDown);
-    });
-
-    filmDetailsComponent.setCloseButtonClickHandler(() => {
-      filmDetailsComponent.getElement().remove();
-    });
-
-    render(container, filmCardComponent);
+    const filmCardPresenter = new FilmCardPresenter(container);
+    filmCardPresenter.init(film);
   }
 
   _renderFilms(container, quantity, films) {
