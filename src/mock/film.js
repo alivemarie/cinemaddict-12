@@ -15,6 +15,8 @@ import {
   COUNTRIES
 } from "../consts";
 
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
 const MAX_WRITERS = 3;
 const MAX_ACTORS = 5;
 const MAX_GENRES = 3;
@@ -48,6 +50,7 @@ export const generateComment = () => {
 };
 
 export const generateFilmDetails = () => {
+  const id = generateId();
   const title = getRandomItem(FILM_NAME);
   const titleOriginal = title;
   const poster = getRandomItem(POSTERS);
@@ -67,6 +70,7 @@ export const generateFilmDetails = () => {
   const isMarkedAsWatched = Boolean(getRandomInteger(0, 1));
   const isFavorite = Boolean(getRandomInteger(0, 1));
   return {
+    id,
     title,
     titleOriginal,
     poster,
