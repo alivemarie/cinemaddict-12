@@ -1,6 +1,6 @@
-import {showYearFromDate} from "../utils/film";
-import {generateComment} from "../mock/film";
-import AbstractView from "./abstract";
+import {showYearFromDate} from "../utils/film.js";
+import {generateComment} from "../mock/film.js";
+import AbstractView from "./abstractComponent.js";
 const MAIN_GENRE = 0;
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 

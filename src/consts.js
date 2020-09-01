@@ -37,3 +37,9 @@ export const ACTORS = [`Chris Evans`, `Adam Sandler`, `Bradley Cooper`, `Jackie 
   `Chris Hemsworth`, `Dwayne Johnson`, `Jennifer Lawrence`, `Emma Stone`, `Emma Watson`, `Angelina Jolie`];
 export const COUNTRIES = [`USA`, `Russia`, `Australia`, `India`, `Spain`, `UK`];
 export const AGE_RATINGS = [`0+`, `6+`, `12+`, `16+`, `18+`];
+
+export const SortType = {
+  DEFAULT: `default`,
+  DATE: `date`,
+  RATING: `rating`
+};

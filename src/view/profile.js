@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import AbstractView from "./abstractComponent";
 
 const TEST_USER_RATING = 15;
 const USER_RATING_TITLE = {

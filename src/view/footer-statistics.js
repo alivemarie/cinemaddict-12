@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import AbstractView from "./abstractComponent";
 
 const TEST_NUMBER = 150000;
 

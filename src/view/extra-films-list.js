@@ -1,5 +1,5 @@
 const TEST_EXTRA_HEADER = `Recommend you`;
-import AbstractView from "./abstract.js";
+import AbstractView from "./abstractComponent.js";
 
 const createExtraFilmsListTemplate = (extraHeader) => {
   return `<section class="films-list--extra">

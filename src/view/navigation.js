@@ -1,4 +1,4 @@
-import AbstractView from "./abstract";
+import AbstractView from "./abstractComponent";
 const TEST_FILTERS = new Array(3).fill().map(() => {
   return {
     name: `testFilterName`,
