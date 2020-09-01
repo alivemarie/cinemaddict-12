@@ -211,6 +211,7 @@ export default class FilmDetails extends AbstractComponentView {
   constructor(filmDetails = TEST_FILM_DETAILS) {
     super();
     this._filmDetails = filmDetails;
+    this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
     this._watchedClickHandler = this._watchedClickHandler.bind(this);
@@ -236,6 +237,14 @@ export default class FilmDetails extends AbstractComponentView {
     this._callback.addToWatchlistClick();
   }
 
+  _selectEmojiHandler(evt) {
+    const emoji = evt.target.value;
+    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    if (emoji) {
+      emojiContainer.innerHTML = `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+    }
+  }
+
   setFavoriteClickHandler(callback) {
     this._callback.favoriteClick = callback;
     this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
@@ -249,6 +258,11 @@ export default class FilmDetails extends AbstractComponentView {
   setAddToWatchlistClickHandler(callback) {
     this._callback.addToWatchlistClick = callback;
     this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._addToWatchlistClickHandler);
+  }
+
+  setSelectEmojiHandler() {
+    this.getElement().querySelector(`.film-details__emoji-list`)
+      .addEventListener(`click`, this._selectEmojiHandler);
   }
 
   _closeButtonClickHandler(evt) {

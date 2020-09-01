@@ -37,6 +37,7 @@ export default class FilmCard {
     this._filmDetailsComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmDetailsComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmDetailsComponent.setAddToWatchlistClickHandler(this._handleAddToWatchlistClick);
+    this._filmDetailsComponent.setSelectEmojiHandler();
 
     if (prevFilmCardComponent === null || prevFilmDetailsComponent === null) {
       render(this._filmsContainer, this._filmCardComponent);
