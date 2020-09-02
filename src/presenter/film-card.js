@@ -119,7 +119,6 @@ export default class FilmCard {
   }
 
   _handleCommentsClick() {
-    console.log(this._filmDetailsComponent);
     if (this._bodyElement.contains(this._filmDetailsComponent.getElement())) {
       return;
     }
