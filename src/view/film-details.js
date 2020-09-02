@@ -1,6 +1,7 @@
 import {showFullReleaseDate} from "../utils/film.js";
 import {generateComment} from "../mock/film.js";
-import AbstractComponentView from "./abstract-component.js";
+import {replace, createElement} from "../utils/render.js";
+import SmartComponentView from "./smart.js";
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
@@ -87,21 +88,35 @@ const createFilmDetailsTable = (film) => {
           </table>`;
 };
 
+const createAddToWatchlistControl = (isAddedToWatchlist) => {
+  return `<input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isAddedToWatchlist ? `checked` : ``}>
+        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>`;
+};
+
+const createIsWatchedControl = (isMarkedAsWatched) => {
+  return `<input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isMarkedAsWatched ? `checked` : ``}>
+        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>`;
+};
+
+const createIsFavoriteControl = (isFavorite) => {
+  return `<input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
+        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>`;
+};
+
 const createFilmDetailsControls = ({
   isAddedToWatchlist,
   isMarkedAsWatched,
   isFavorite
 }) => {
 
+  const addToWatchlistControl = createAddToWatchlistControl(isAddedToWatchlist);
+  const isWatchedControl = createIsWatchedControl(isMarkedAsWatched);
+  const isFavoriteControl = createIsFavoriteControl(isFavorite);
+
   return `<section class="film-details__controls">
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watchlist" name="watchlist" ${isAddedToWatchlist ? `checked` : ``}>
-        <label for="watchlist" class="film-details__control-label film-details__control-label--watchlist">Add to watchlist</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="watched" name="watched" ${isMarkedAsWatched ? `checked` : ``}>
-        <label for="watched" class="film-details__control-label film-details__control-label--watched">Already watched</label>
-
-        <input type="checkbox" class="film-details__control-input visually-hidden" id="favorite" name="favorite" ${isFavorite ? `checked` : ``}>
-        <label for="favorite" class="film-details__control-label film-details__control-label--favorite">Add to favorites</label>
+        ${addToWatchlistControl}
+        ${isWatchedControl}
+        ${isFavoriteControl}
       </section>`;
 };
 
@@ -207,34 +222,89 @@ const createFilmDetailsTemplate = (film) => {
 </section>`;
 };
 
-export default class FilmDetails extends AbstractComponentView {
+export default class FilmDetails extends SmartComponentView {
   constructor(filmDetails = TEST_FILM_DETAILS) {
     super();
     this._filmDetails = filmDetails;
+    this._option = {
+      isFavorite: this._filmDetails.isFavorite,
+      isWatched: this._filmDetails.isMarkedAsWatched,
+      isAddedToWatchlist: this._filmDetails.isAddedToWatchlist
+    };
+
     this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
-    this._favoriteClickHandler = this._favoriteClickHandler.bind(this);
-    this._watchedClickHandler = this._watchedClickHandler.bind(this);
-    this._addToWatchlistClickHandler = this._addToWatchlistClickHandler.bind(this);
+
+    this._setSelectEmojiHandler();
+    this._enableIsFavoriteToggler();
+    this._enableIsWatchedToggler();
+    this._enableIsAddedToWatchlistToggler();
   }
 
   getTemplate() {
     return createFilmDetailsTemplate(this._filmDetails);
   }
 
-  _favoriteClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.favoriteClick();
+  _enableIsFavoriteToggler() {
+    const element = this.getElement();
+
+    const isFavoriteToggleHandler = (evt) => {
+      evt.preventDefault();
+
+      const oldIsFavoriteElement = element.querySelector(`#favorite`);
+
+      const updatedIsFavoriteElement = createElement(createIsFavoriteControl(!this._option.isFavorite));
+
+      replace(updatedIsFavoriteElement, oldIsFavoriteElement);
+      this._option.isFavorite = !this._option.isFavorite;
+      this._filmDetails.isFavorite = !this._filmDetails.isFavorite;
+    };
+
+    element.querySelector(`.film-details__control-label--favorite`)
+      .addEventListener(`click`, isFavoriteToggleHandler);
   }
 
-  _watchedClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.watchedClick();
+  _enableIsWatchedToggler() {
+    const element = this.getElement();
+
+    const isWatchedToggleHandler = (evt) => {
+      evt.preventDefault();
+
+      const oldIsWatchedElement = element.querySelector(`#watched`);
+
+      const updatedIsFavoriteElement = createElement(createIsWatchedControl(!this._option.isWatched));
+
+      replace(updatedIsFavoriteElement, oldIsWatchedElement);
+      this._option.isWatched = !this._option.isWatched;
+      this._filmDetails.isMarkedAsWatched = !this._filmDetails.isMarkedAsWatched;
+    };
+
+    element.querySelector(`.film-details__control-label--watched`)
+      .addEventListener(`click`, isWatchedToggleHandler);
   }
 
-  _addToWatchlistClickHandler(evt) {
-    evt.preventDefault();
-    this._callback.addToWatchlistClick();
+  _enableIsAddedToWatchlistToggler() {
+    const element = this.getElement();
+
+    const addToWatchlistToggleHandler = (evt) => {
+      evt.preventDefault();
+
+      const oldIsAddedToWatchlistElement = element.querySelector(`#watchlist`);
+
+      const updatedIsAddedToWatchlistElement = createElement(createAddToWatchlistControl(!this._option.isAddedToWatchlist));
+
+      replace(updatedIsAddedToWatchlistElement, oldIsAddedToWatchlistElement);
+      this._option.isAddedToWatchlist = !this._option.isAddedToWatchlist;
+      this._filmDetails.isAddedToWatchlist = !this._filmDetails.isAddedToWatchlist;
+    };
+
+    element.querySelector(`.film-details__control-label--watchlist`)
+      .addEventListener(`click`, addToWatchlistToggleHandler);
+  }
+
+  _setSelectEmojiHandler() {
+    this.getElement().querySelector(`.film-details__emoji-list`)
+      .addEventListener(`click`, this._selectEmojiHandler);
   }
 
   _selectEmojiHandler(evt) {
@@ -245,28 +315,7 @@ export default class FilmDetails extends AbstractComponentView {
     }
   }
 
-  setFavoriteClickHandler(callback) {
-    this._callback.favoriteClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--favorite`).addEventListener(`click`, this._favoriteClickHandler);
-  }
-
-  setWatchedClickHandler(callback) {
-    this._callback.watchedClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--watched`).addEventListener(`click`, this._watchedClickHandler);
-  }
-
-  setAddToWatchlistClickHandler(callback) {
-    this._callback.addToWatchlistClick = callback;
-    this.getElement().querySelector(`.film-details__control-label--watchlist`).addEventListener(`click`, this._addToWatchlistClickHandler);
-  }
-
-  setSelectEmojiHandler() {
-    this.getElement().querySelector(`.film-details__emoji-list`)
-      .addEventListener(`click`, this._selectEmojiHandler);
-  }
-
-  _closeButtonClickHandler(evt) {
-    evt.preventDefault();
+  _closeButtonClickHandler() {
     this._callback.click(this._filmDetails);
   }
 

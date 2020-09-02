@@ -112,10 +112,6 @@ export default class FilmsList {
     presenters = {};
   }
 
-  _clearExtraFilmsField() {
-
-  }
-
   _renderSort() {
     render(this._mainContainer, this._sortComponent);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
