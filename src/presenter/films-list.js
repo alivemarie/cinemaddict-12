@@ -33,6 +33,7 @@ export default class FilmsList {
     this._handleFilmCardChange = this._handleFilmCardChange.bind(this);
     this._handleSortTypeChange = this._handleSortTypeChange.bind(this);
     this._handleShowMoreButtonClick = this._handleShowMoreButtonClick.bind(this);
+    this._handleResetFilmCardDetailsPopups = this._handleResetFilmCardDetailsPopups.bind(this);
     this._currentSortType = SortType.DEFAULT;
   }
 
@@ -52,6 +53,18 @@ export default class FilmsList {
 
     this._renderTopCommentedFilms();
     this._renderTopRatedFilms();
+  }
+
+  _handleResetFilmCardDetailsPopups() {
+    Object
+      .values(this._filmCardPresenter)
+      .forEach((presenter) => presenter.resetDetails());
+    Object
+      .values(this._filmTopCommentedCardPresenter)
+      .forEach((presenter) => presenter.resetDetails());
+    Object
+      .values(this._filmTopRatedCardPresenter)
+      .forEach((presenter) => presenter.resetDetails());
   }
 
   _renderNavigation(films) {
@@ -118,7 +131,7 @@ export default class FilmsList {
   }
 
   _renderFilmCard(container, film) {
-    const filmCardPresenter = new FilmCardPresenter(container, this._handleFilmCardChange);
+    const filmCardPresenter = new FilmCardPresenter(container, this._handleFilmCardChange, this._handleResetFilmCardDetailsPopups);
     filmCardPresenter.init(film);
     switch (container) {
       case this._mostCommentedFilmsContainerElement:

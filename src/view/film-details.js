@@ -1,7 +1,7 @@
 import {showFullReleaseDate} from "../utils/film.js";
 import {generateComment} from "../mock/film.js";
 import {replace, createElement} from "../utils/render.js";
-import SmartComponentView from "./smart.js";
+import AbstractComponentView from "./abstract-component.js";
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
@@ -222,7 +222,7 @@ const createFilmDetailsTemplate = (film) => {
 </section>`;
 };
 
-export default class FilmDetails extends SmartComponentView {
+export default class FilmDetails extends AbstractComponentView {
   constructor(filmDetails = TEST_FILM_DETAILS) {
     super();
     this._filmDetails = filmDetails;

@@ -1,11 +1,17 @@
 import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details";
 import {render, remove, replace} from "../utils/render.js";
+const Mode = {
+  DEFAULT: `DEFAULT`,
+  DETAILS: `DETAILS`
+};
 
 export default class FilmCard {
-  constructor(filmsContainer, changeData) {
+  constructor(filmsContainer, changeData, resetFilmCardDetailsPopups) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
+    this._resetFilmCardDetailsPopups = resetFilmCardDetailsPopups;
+    this._mode = Mode.DEFAULT;
     this._bodyElement = document.querySelector(`body`);
 
     this._filmCardComponent = null;
@@ -92,23 +98,40 @@ export default class FilmCard {
     );
   }
 
+  resetDetails() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closeDetails();
+    }
+  }
+
+  _closeDetails() {
+    this._filmDetailsComponent.getElement().remove();
+    document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
+  }
+
   _escKeyDownHandler(evt) {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
-      remove(this._filmDetailsComponent);
-      document.removeEventListener(`keydown`, this._escKeyDownHandler);
+      this._closeDetails();
+      this._changeData(this._film);
     }
   }
 
   _handleCommentsClick() {
+    console.log(this._filmDetailsComponent);
+    if (this._bodyElement.contains(this._filmDetailsComponent.getElement())) {
+      return;
+    }
     render(this._bodyElement, this._filmDetailsComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
+    this._resetFilmCardDetailsPopups();
+    this._mode = Mode.DETAILS;
   }
 
   _handleCloseButtonClick(film) {
     remove(this._filmDetailsComponent);
     this._changeData(film);
-    console.log(`changedata вызван`);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
   }
 
