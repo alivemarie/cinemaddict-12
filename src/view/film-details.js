@@ -1,4 +1,4 @@
-import {showFullReleaseDate} from "../utils/film.js";
+import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
 import {generateComment} from "../mock/film.js";
 import {replace, createElement} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
@@ -134,7 +134,7 @@ const createFilmDetailsCommentsList = (comments) => {
               <p class="film-details__comment-text">${comment.text}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.author}</span>
-                <span class="film-details__comment-day">${comment.date.toLocaleString(`en-GB`)}</span>
+                <span class="film-details__comment-day">${showCommentDate(comment.date)}</span>
                 <button class="film-details__comment-delete">Delete</button>
               </p>
             </div>

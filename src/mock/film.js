@@ -4,7 +4,6 @@ import {
   ACTORS,
   SCREENWRITERS,
   FILM_DIRECTORS,
-  DURATIONS,
   POSTERS,
   FILM_NAME,
   COMMENT_AUTHOR,
@@ -25,6 +24,12 @@ const COMMENTS = {
   min: 2,
   max: 15
 };
+
+const DURATION = {
+  min: 30,
+  max: 180
+};
+
 const randomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
@@ -45,7 +50,7 @@ export const generateComment = () => {
     text: getRandomItem(COMMENT_TEXT),
     emoji: getRandomItem(COMMENT_EMOJI),
     author: getRandomItem(COMMENT_AUTHOR),
-    date: randomDate(new Date(2012, 0, 1), new Date())
+    date: randomDate(new Date(2019, 1, 1), new Date())
   };
 };
 
@@ -55,7 +60,7 @@ export const generateFilmDetails = () => {
   const titleOriginal = title;
   const poster = getRandomItem(POSTERS);
   const rating = (Math.random() * 10).toFixed(1);
-  const duration = getRandomItem(DURATIONS);
+  const duration = getRandomInteger(DURATION.min, DURATION.max);
   const director = getRandomItem(FILM_DIRECTORS);
   const country = getRandomItem(COUNTRIES);
   const ageRating = getRandomItem(AGE_RATINGS);
