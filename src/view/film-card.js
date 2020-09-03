@@ -1,4 +1,4 @@
-import {showYearFromDate} from "../utils/film.js";
+import {showYearFromDate, showFilmDuration} from "../utils/film.js";
 import {generateComment} from "../mock/film.js";
 import AbstractComponentView from "./abstract-component.js";
 const MAIN_GENRE = 0;
@@ -38,7 +38,7 @@ const createFilmCardTemplate = (film) => {
           <p class="film-card__rating">${rating}</p>
           <p class="film-card__info">
             <span class="film-card__year">${showYearFromDate(releaseDate)}</span>
-            <span class="film-card__duration">${duration}</span>
+            <span class="film-card__duration">${showFilmDuration(duration)}</span>
             <span class="film-card__genre">${genres[MAIN_GENRE]}</span>
           </p>
           <img src="${poster}" alt="" class="film-card__poster">
