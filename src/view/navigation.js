@@ -1,4 +1,4 @@
-import AbstractView from "./abstractComponent";
+import AbstractComponentView from "./abstract-component.js";
 const TEST_FILTERS = new Array(3).fill().map(() => {
   return {
     name: `testFilterName`,
@@ -19,7 +19,7 @@ const createNavigationTemplate = (filters) => {
   </nav>`;
 };
 
-export default class Navigation extends AbstractView {
+export default class Navigation extends AbstractComponentView {
   constructor(filters = TEST_FILTERS) {
     super();
     this._filters = filters;

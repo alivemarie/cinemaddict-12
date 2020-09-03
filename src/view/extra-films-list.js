@@ -1,5 +1,5 @@
 const TEST_EXTRA_HEADER = `Recommend you`;
-import AbstractView from "./abstractComponent.js";
+import AbstractComponentView from "./abstract-component.js";
 
 const createExtraFilmsListTemplate = (extraHeader) => {
   return `<section class="films-list--extra">
@@ -7,7 +7,7 @@ const createExtraFilmsListTemplate = (extraHeader) => {
             <div class="films-list__container"></div></section>`;
 };
 
-export default class ExtraFilmsList extends AbstractView {
+export default class ExtraFilmsList extends AbstractComponentView {
   constructor(extraHeader = TEST_EXTRA_HEADER) {
     super();
     this._extraHeader = extraHeader;

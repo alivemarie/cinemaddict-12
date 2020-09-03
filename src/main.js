@@ -3,7 +3,7 @@ import FooterStatisticsView from "./view/footer-statistics.js";
 import {generateFilmDetails} from "./mock/film.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {getUserRating} from "./mock/user.js";
-import MovieListPresenter from "./presenter/filmlist.js";
+import FilmsListPresenter from "./presenter/films-list.js";
 const FILMS_COUNT = {
   ALL_MOVIES: 30,
   EXTRA_MOVIES: 2,
@@ -16,8 +16,8 @@ const userRating = getUserRating(allMovies);
 render(siteHeaderElement, new ProfileView(userRating));
 
 const siteMainElement = document.querySelector(`main`);
-const movieListPresenter = new MovieListPresenter(siteMainElement);
-movieListPresenter.init(allMovies);
+const filmsListPresenter = new FilmsListPresenter(siteMainElement);
+filmsListPresenter.init(allMovies);
 
 const footerStatistics = document.querySelector(`.footer__statistics`);
 render(footerStatistics, new FooterStatisticsView(allMovies.length), RenderPosition.AFTERBEGIN);
