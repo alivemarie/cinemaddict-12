@@ -17,4 +17,8 @@ const showFilmDuration = (minutes) => {
 const showCommentDate = (date) => {
   return moment(date, `YYYY/MM/DD H:mm`).fromNow();
 };
-export {showYearFromDate, showFullReleaseDate, showFilmDuration, showCommentDate};
+
+const sortFilmsByRating = (a, b) => b.releaseDate.getTime() - a.releaseDate.getTime();
+const sortFilmsByDate = (a, b) => b.rating - a.rating;
+
+export {showYearFromDate, showFullReleaseDate, showFilmDuration, showCommentDate, sortFilmsByRating, sortFilmsByDate};
