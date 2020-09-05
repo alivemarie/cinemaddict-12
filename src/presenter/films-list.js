@@ -21,8 +21,9 @@ const EXTRA_FILMS = {
 };
 
 export default class FilmsList {
-  constructor(mainContainer) {
+  constructor(mainContainer, filmsModel) {
     this._mainContainer = mainContainer;
+    this._filmsModel = filmsModel;
     this._filmCardPresenter = {};
     this._filmTopCommentedCardPresenter = {};
     this._filmTopRatedCardPresenter = {};
@@ -53,6 +54,10 @@ export default class FilmsList {
 
     this._renderTopCommentedFilms();
     this._renderTopRatedFilms();
+  }
+
+  _getFilms() {
+    return this._filmsModel.getFilms();
   }
 
   _handleResetFilmCardDetailsPopups() {
