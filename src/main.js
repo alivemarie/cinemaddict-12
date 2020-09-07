@@ -21,7 +21,7 @@ render(siteHeaderElement, new ProfileView(userRating));
 
 const siteMainElement = document.querySelector(`main`);
 const filmsListPresenter = new FilmsListPresenter(siteMainElement, filmsModel);
-filmsListPresenter.init(allMovies);
+filmsListPresenter.init();
 
 const footerStatistics = document.querySelector(`.footer__statistics`);
 render(footerStatistics, new FooterStatisticsView(allMovies.length), RenderPosition.AFTERBEGIN);

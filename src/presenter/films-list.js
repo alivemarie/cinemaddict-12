@@ -40,9 +40,8 @@ export default class FilmsList {
     this._currentSortType = SortType.DEFAULT;
   }
 
-  init(films) {
-    this._films = films.slice();
-    this._sourcedFilms = films.slice();
+  init() {
+    this._films = this._filmsModel.getFilms();
     this._renderNavigation(this._films);
     this._renderSort();
     this._renderAllFilmsListContainer();
@@ -57,9 +56,9 @@ export default class FilmsList {
   _getFilms() {
     switch (this._currentSortType) {
       case SortType.DATE:
-        return this._filmsModel.getFilms().slice().sort(sortFilmsByRating);
-      case SortType.RATING:
         return this._filmsModel.getFilms().slice().sort(sortFilmsByDate);
+      case SortType.RATING:
+        return this._filmsModel.getFilms().slice().sort(sortFilmsByRating);
     }
     return this._filmsModel.getFilms();
   }
@@ -82,8 +81,8 @@ export default class FilmsList {
   }
 
   _handleFilmCardChange(updatedFilm) {
-    this._films = updateItem(this._films, updatedFilm);
-    this._sourcedFilms = updateItem(this._sourcedFilms, updatedFilm);
+    this._filmsModel.updateFilm(null, updatedFilm);
+
     if (this._filmTopRatedCardPresenter[updatedFilm.id]) {
       this._filmTopRatedCardPresenter[updatedFilm.id].init(updatedFilm);
     }
