@@ -1,8 +1,12 @@
 import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
-import {generateComment, getRandomItem} from "../mock/film.js";
+import {generateComment, getRandomItem, generateId} from "../mock/film.js";
 import {replace, createElement, render} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
 import {COMMENT_AUTHOR} from "../consts.js";
+
+const KeyCodes = {
+  ENTER: 13
+};
 
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
@@ -122,7 +126,7 @@ const createFilmDetailsControls = ({
       </section>`;
 };
 
-const createFilmDetailsCommentsList = (comments) => {
+const createFilmDetailsCommentsList = (comments, filmID) => {
 
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
@@ -137,7 +141,7 @@ const createFilmDetailsCommentsList = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.author}</span>
                 <span class="film-details__comment-day">${showCommentDate(comment.date)}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete" data-film-id="${filmID}" data-comment-id="${comment.id}">Delete</button>
               </p>
             </div>
           </li>`;
@@ -188,7 +192,7 @@ const createFilmDetailsTemplate = (film) => {
   const filmInfoHead = createFilmInfoHead(film);
   const filmDetailsTable = createFilmDetailsTable(film);
   const filmDetailsControls = createFilmDetailsControls(film);
-  const filmDetailsCommentsList = createFilmDetailsCommentsList(comments);
+  const filmDetailsCommentsList = createFilmDetailsCommentsList(comments, film.id);
   const filmAddingCommentField = createAddingCommentField();
 
   return `<section class="film-details">
@@ -236,7 +240,6 @@ export default class FilmDetails extends AbstractComponentView {
 
     this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
-    this._deleteCommentHandler = this._deleteCommentHandler.bind(this);
     this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
 
     this._setSelectEmojiHandler();
@@ -244,6 +247,7 @@ export default class FilmDetails extends AbstractComponentView {
     this._enableIsWatchedToggler();
     this._enableIsAddedToWatchlistToggler();
     this._enableCommentsAdding();
+    this._enableCommentsDeleting();
     this._setCommentTextInputHandler();
   }
 
@@ -341,7 +345,7 @@ export default class FilmDetails extends AbstractComponentView {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${getRandomItem(COMMENT_AUTHOR)}</span>
                 <span class="film-details__comment-day">${showCommentDate(new Date())}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete" data-film-id="${this._filmDetails.id}" data-comment-id="${generateId()}">Delete</button>
               </p>
             </div>
           </li>`;
@@ -352,13 +356,28 @@ export default class FilmDetails extends AbstractComponentView {
     const element = this.getElement();
 
     const addCommentHandler = (evt) => {
-      if (evt.keyCode === 13 && evt.ctrlKey) {
-        console.log(1);
+      if (evt.keyCode === KeyCodes.ENTER && evt.ctrlKey) {
         evt.preventDefault();
+
+        switch (true) {
+          case !this._commentText:
+            element.querySelector(`.film-details__comment-input`).style.outline = `3px solid red`;
+            return;
+          case !this._emoji:
+            element.querySelector(`.film-details__add-emoji-label`).style.outline = `3px solid red`;
+            return;
+          default:
+            element.querySelector(`.film-details__comment-input`).style.outline = ``;
+            element.querySelector(`.film-details__add-emoji-label`).style.outline = ``;
+        }
+
         const commentsList = element.querySelector(`.film-details__comments-list`);
         const comment = this._createCommentElement();
 
         render(commentsList, comment);
+
+        const commentsCount = element.querySelector(`.film-details__comments-count`);
+        commentsCount.innerHTML = +commentsCount.innerHTML + 1;
       }
     };
 
@@ -366,15 +385,19 @@ export default class FilmDetails extends AbstractComponentView {
       .addEventListener(`keydown`, addCommentHandler);
   }
 
-  _deleteCommentHandler(evt) {
-    evt.preventDefault();
-    this._deleteCommentClick(evt.target.dataset.commentId);
-  }
+  _enableCommentsDeleting() {
+    const element = this.getElement();
+    const deleteClickHandler = (evt) => {
+      evt.preventDefault();
+      const removedComment = evt.target.closest(`.film-details__comment`);
+      removedComment.remove();
 
-  setDeleteCommentClickHandler(callback) {
-    this._deleteCommentClick = callback;
-    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((element) => {
-      element.addEventListener(`click`, this._deleteCommentHandler);
+      const commentsCount = element.querySelector(`.film-details__comments-count`);
+      commentsCount.innerHTML = +commentsCount.innerHTML - 1;
+    };
+
+    element.querySelectorAll(`.film-details__comment-delete`).forEach((comment) => {
+      comment.addEventListener(`click`, deleteClickHandler);
     });
   }
 

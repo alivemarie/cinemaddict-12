@@ -14,7 +14,7 @@ import {
   COUNTRIES
 } from "../consts";
 
-const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+export const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
 
 const MAX_WRITERS = 3;
 const MAX_ACTORS = 5;
@@ -47,6 +47,7 @@ const getFewRandomItems = (items, max) => {
 
 export const generateComment = () => {
   return {
+    id: generateId(),
     text: getRandomItem(COMMENT_TEXT),
     emoji: getRandomItem(COMMENT_EMOJI),
     author: getRandomItem(COMMENT_AUTHOR),
