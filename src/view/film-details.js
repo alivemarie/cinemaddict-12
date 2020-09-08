@@ -3,6 +3,7 @@ import {generateComment, getRandomItem, generateId} from "../mock/film.js";
 import {replace, createElement, render} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
 import {COMMENT_AUTHOR} from "../consts.js";
+import he from "he";
 
 const KeyCodes = {
   ENTER: 13
@@ -341,7 +342,7 @@ export default class FilmDetails extends AbstractComponentView {
               <img src="./images/emoji/${this._emoji}.png" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
-              <p class="film-details__comment-text">${this._commentText}</p>
+              <p class="film-details__comment-text">${he.encode(this._commentText)}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${getRandomItem(COMMENT_AUTHOR)}</span>
                 <span class="film-details__comment-day">${showCommentDate(new Date())}</span>
