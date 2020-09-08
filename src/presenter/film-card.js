@@ -34,7 +34,6 @@ export default class FilmCard {
     this._filmDetailsComponent = new FilmDetailsView(this._film);
 
     this._filmCardComponent.setFilmCommentsClickHandler(this._handleCommentsClick);
-    console.log(`123`);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
 
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -135,5 +134,4 @@ export default class FilmCard {
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
-
 }
