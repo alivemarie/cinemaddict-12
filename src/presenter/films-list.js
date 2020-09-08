@@ -5,7 +5,6 @@ import ShowMoreButtonView from "../view/show-more-button.js";
 import NoFilmsView from "../view/no-films.js";
 import {render, remove} from "../utils/render.js";
 import {UpdateType} from "../consts.js";
-
 import {getTopCommentedFilms, getTopRatedFilms} from "../mock/extra-films";
 import {sortFilmsByRating, sortFilmsByDate} from "../utils/film.js";
 import {SortType} from '../consts.js';
@@ -30,6 +29,7 @@ export default class FilmsList {
     this._filmCardPresenter = {};
     this._filmTopCommentedCardPresenter = {};
     this._filmTopRatedCardPresenter = {};
+    this._filmsListComponent = new FilmsListView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._sortComponent = new SortView();
     this._noFilmComponent = new NoFilmsView();
@@ -47,14 +47,7 @@ export default class FilmsList {
   }
 
   init() {
-    this._renderSort();
-    this._renderAllFilmsListContainer();
-    if (this._allFilmsListContainerElement) {
-      this._renderFilmsIntoMainContainer();
-    }
-
-    this._renderTopCommentedFilms();
-    this._renderTopRatedFilms();
+    this._renderFilmsBoard();
   }
 
   _getFilms() {
@@ -96,6 +89,22 @@ export default class FilmsList {
     }
   }
 
+  _handleModelEvent(updateType, film) {
+    switch (updateType) {
+      case UpdateType.MINOR:
+        this._clearView();
+        this._renderFilmsBoard();
+        break;
+      case UpdateType.MAJOR:
+        this._clearView({resetRenderedFilmCount: true, resetSortType: true});
+        this._renderFilmsBoard();
+        break;
+      default:
+        this._filmCardPresenter[film.id].init(film);
+        break;
+    }
+  }
+
   _handleSortTypeChange(sortType) {
     if (this._currentSortType === sortType) {
       return;
@@ -103,9 +112,7 @@ export default class FilmsList {
 
     this._currentSortType = sortType;
     this._clearView();
-    this._renderFilmsIntoMainContainer();
-    this._renderTopCommentedFilms();
-    this._renderTopRatedFilms();
+    this._renderFilmsBoard();
   }
 
   _clearView({resetRenderedFilmCount = false, resetSortType = false} = {}) {
@@ -166,17 +173,6 @@ export default class FilmsList {
     films.forEach((film) => this._renderFilmCard(container, film));
   }
 
-  _renderAllFilmsListContainer() {
-    if (this._getFilms().length === 0) {
-      render(this._mainContainer, this._noFilmComponent);
-    } else {
-      this._filmsListComponent = new FilmsListView();
-    }
-    render(this._mainContainer, this._filmsListComponent);
-
-    this._allFilmsListContainerElement = this._filmsListComponent.getElement().querySelector(`.films-list__container`);
-  }
-
   _renderFilmsIntoMainContainer() {
     const filmsNumber = this._getFilms().length;
     const renderNumber = Math.min(filmsNumber, FILM_COUNT_PER_STEP);
@@ -193,28 +189,6 @@ export default class FilmsList {
     this._showMoreButtonComponent.setClickHandler(this._handleShowMoreButtonClick);
   }
 
-  _handleModelEvent(updateType, film) {
-    switch (updateType) {
-      case UpdateType.MINOR:
-        this._clearView();
-        this._renderAllFilmsListContainer();
-        if (this._allFilmsListContainerElement) {
-          this._renderFilmsIntoMainContainer();
-        }
-        break;
-      case UpdateType.MAJOR:
-        this._clearView({resetRenderedFilmCount: true, resetSortType: true});
-        this._renderAllFilmsListContainer();
-        if (this._allFilmsListContainerElement) {
-          this._renderFilmsIntoMainContainer();
-        }
-        break;
-      default:
-        this._filmCardPresenter[film.id].init(film);
-        break;
-    }
-  }
-
   _handleShowMoreButtonClick() {
     const filmsNumber = this._getFilms().length;
     const updatedRenderedFilmsCount = Math.min(filmsNumber, this._renderedFilmCards + FILM_COUNT_PER_STEP);
@@ -226,6 +200,27 @@ export default class FilmsList {
     if (this._renderedFilmCards >= filmsNumber) {
       remove(this._showMoreButtonComponent);
     }
+  }
+
+  _renderFilmsBoard() {
+    this._renderSort();
+
+    if (this._getFilms().length === 0) {
+      render(this._mainContainer, this._noFilmComponent);
+      return;
+    }
+
+    render(this._mainContainer, this._filmsListComponent);
+
+    this._allFilmsListContainerElement = this._filmsListComponent
+      .getElement().querySelector(`.films-list__container`);
+
+    if (this._allFilmsListContainerElement) {
+      this._renderFilmsIntoMainContainer();
+    }
+
+    this._renderTopCommentedFilms();
+    this._renderTopRatedFilms();
   }
 
   _renderFillFilmsContainer(container, quantity, films) {
