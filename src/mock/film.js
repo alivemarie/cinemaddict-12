@@ -34,7 +34,7 @@ const randomDate = (start, end) => {
   return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 };
 
-const getRandomItem = (items) => {
+export const getRandomItem = (items) => {
   return items[getRandomInteger(0, items.length - 1)];
 };
 

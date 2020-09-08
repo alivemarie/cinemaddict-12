@@ -1,7 +1,9 @@
 import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
-import {generateComment} from "../mock/film.js";
-import {replace, createElement} from "../utils/render.js";
+import {generateComment, getRandomItem} from "../mock/film.js";
+import {replace, createElement, render} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
+import {COMMENT_AUTHOR} from "../consts.js";
+
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
@@ -234,11 +236,15 @@ export default class FilmDetails extends AbstractComponentView {
 
     this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
+    this._deleteCommentHandler = this._deleteCommentHandler.bind(this);
+    this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
 
     this._setSelectEmojiHandler();
     this._enableIsFavoriteToggler();
     this._enableIsWatchedToggler();
     this._enableIsAddedToWatchlistToggler();
+    this._enableCommentsAdding();
+    this._setCommentTextInputHandler();
   }
 
   getTemplate() {
@@ -312,11 +318,68 @@ export default class FilmDetails extends AbstractComponentView {
     const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
     if (emoji) {
       emojiContainer.innerHTML = `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+      this._emoji = emoji;
     }
   }
 
+  _inputTextCommentHandler(evt) {
+    evt.preventDefault();
+    this._commentText = evt.target.value;
+  }
+
+  _setCommentTextInputHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._inputTextCommentHandler);
+  }
+
+  _createCommentElement() {
+    const commentTemplate = `<li class="film-details__comment">
+            <span class="film-details__comment-emoji">
+              <img src="./images/emoji/${this._emoji}.png" width="55" height="55" alt="emoji-smile">
+            </span>
+            <div>
+              <p class="film-details__comment-text">${this._commentText}</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">${getRandomItem(COMMENT_AUTHOR)}</span>
+                <span class="film-details__comment-day">${showCommentDate(new Date())}</span>
+                <button class="film-details__comment-delete">Delete</button>
+              </p>
+            </div>
+          </li>`;
+    return createElement(commentTemplate);
+  }
+
+  _enableCommentsAdding() {
+    const element = this.getElement();
+
+    const addCommentHandler = (evt) => {
+      if (evt.keyCode === 13 && evt.ctrlKey) {
+        console.log(1);
+        evt.preventDefault();
+        const commentsList = element.querySelector(`.film-details__comments-list`);
+        const comment = this._createCommentElement();
+
+        render(commentsList, comment);
+      }
+    };
+
+    element.querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, addCommentHandler);
+  }
+
+  _deleteCommentHandler(evt) {
+    evt.preventDefault();
+    this._deleteCommentClick(evt.target.dataset.commentId);
+  }
+
+  setDeleteCommentClickHandler(callback) {
+    this._deleteCommentClick = callback;
+    this.getElement().querySelectorAll(`.film-details__comment-delete`).forEach((element) => {
+      element.addEventListener(`click`, this._deleteCommentHandler);
+    });
+  }
+
   _closeButtonClickHandler() {
-    this._callback.click(this._filmDetails);
+    this._callback.click();
   }
 
   setCloseButtonClickHandler(callback) {

@@ -4,7 +4,7 @@ import ExtraFilmsListView from "../view/extra-films-list.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
 import NoFilmsView from "../view/no-films.js";
 import {render, remove} from "../utils/render.js";
-import {UpdateType} from "../consts.js";
+import {UpdateType, UserAction} from "../consts.js";
 import {getTopCommentedFilms, getTopRatedFilms} from "../mock/extra-films";
 import {sortFilmsByRating, sortFilmsByDate} from "../utils/film.js";
 import {SortType} from '../consts.js';
