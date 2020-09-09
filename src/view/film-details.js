@@ -242,6 +242,7 @@ export default class FilmDetails extends AbstractComponentView {
     this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
     this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setSelectEmojiHandler();
     this._enableIsFavoriteToggler();
@@ -374,6 +375,7 @@ export default class FilmDetails extends AbstractComponentView {
 
         const commentsList = element.querySelector(`.film-details__comments-list`);
         const comment = this._createCommentElement();
+        comment.addEventListener(`click`, this._deleteClickHandler);
 
         render(commentsList, comment);
 
@@ -386,19 +388,21 @@ export default class FilmDetails extends AbstractComponentView {
       .addEventListener(`keydown`, addCommentHandler);
   }
 
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    const element = this.getElement();
+    const removedComment = evt.target.closest(`.film-details__comment`);
+    removedComment.remove();
+
+    const commentsCount = element.querySelector(`.film-details__comments-count`);
+    commentsCount.innerHTML = +commentsCount.innerHTML - 1;
+  }
+
   _enableCommentsDeleting() {
     const element = this.getElement();
-    const deleteClickHandler = (evt) => {
-      evt.preventDefault();
-      const removedComment = evt.target.closest(`.film-details__comment`);
-      removedComment.remove();
-
-      const commentsCount = element.querySelector(`.film-details__comments-count`);
-      commentsCount.innerHTML = +commentsCount.innerHTML - 1;
-    };
 
     element.querySelectorAll(`.film-details__comment-delete`).forEach((comment) => {
-      comment.addEventListener(`click`, deleteClickHandler);
+      comment.addEventListener(`click`, this._deleteClickHandler);
     });
   }
 
