@@ -1,7 +1,6 @@
 import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details";
 import {render, remove, replace} from "../utils/render.js";
-import {UserAction, UpdateType} from "../consts.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
