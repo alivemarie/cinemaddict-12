@@ -69,3 +69,8 @@ export const FilterType = {
   WATCHED: `history`,
   FAVORITES: `favorites`
 };
+
+export const MenuMode = {
+  FILMS: `films`,
+  STATISTICS: `statistics`
+};
