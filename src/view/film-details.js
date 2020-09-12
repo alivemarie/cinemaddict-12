@@ -360,27 +360,22 @@ export default class FilmDetails extends AbstractComponentView {
     const addCommentHandler = (evt) => {
       if (evt.keyCode === KeyCodes.ENTER && evt.ctrlKey) {
         evt.preventDefault();
+        const commentTextElement = element.querySelector(`.film-details__comment-input`);
+        const commentEmojiElement = element.querySelector(`.film-details__add-emoji-label`);
 
-        switch (true) {
-          case !this._commentText:
-            element.querySelector(`.film-details__comment-input`).style.outline = `3px solid red`;
-            return;
-          case !this._emoji:
-            element.querySelector(`.film-details__add-emoji-label`).style.outline = `3px solid red`;
-            return;
-          default:
-            element.querySelector(`.film-details__comment-input`).style.outline = ``;
-            element.querySelector(`.film-details__add-emoji-label`).style.outline = ``;
+        commentTextElement.style.outline = this._commentText ? `` : `3px solid red`;
+        commentEmojiElement.style.outline = this._emoji ? `` : `3px solid red`;
+
+        if (this._commentText && this._emoji) {
+          const commentsList = element.querySelector(`.film-details__comments-list`);
+          const comment = this._createCommentElement();
+          comment.addEventListener(`click`, this._deleteClickHandler);
+
+          render(commentsList, comment);
+
+          const commentsCount = element.querySelector(`.film-details__comments-count`);
+          commentsCount.innerHTML = +commentsCount.innerHTML + 1;
         }
-
-        const commentsList = element.querySelector(`.film-details__comments-list`);
-        const comment = this._createCommentElement();
-        comment.addEventListener(`click`, this._deleteClickHandler);
-
-        render(commentsList, comment);
-
-        const commentsCount = element.querySelector(`.film-details__comments-count`);
-        commentsCount.innerHTML = +commentsCount.innerHTML + 1;
       }
     };
 
