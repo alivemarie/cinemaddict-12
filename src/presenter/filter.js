@@ -50,12 +50,10 @@ export default class FiltersPresenter {
     if (this._currentFilter === filtersType) {
       return;
     }
-    console.log(filtersType);
     this._filtersModel.setFilter(UpdateType.MAJOR, filtersType);
   }
 
   _handleSiteMenuClick(menuItem, filtersType = null) {
-    console.log(menuItem);
     switch (menuItem) {
       case MenuMode.STATISTICS:
         this._currentMenuMode = MenuMode.STATISTICS;
