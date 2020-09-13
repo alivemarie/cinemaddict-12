@@ -44,13 +44,6 @@ export const SortType = {
   RATING: `rating`
 };
 
-export const Emojies = {
-  SMILE: `smile`,
-  SLEEPING: `sleeping`,
-  PUKE: `puke`,
-  ANGRY: `angry`
-};
-
 export const UserAction = {
   UPDATE_FILM: `UPDATE_FILM`,
   ADD_COMMENT: `ADD_COMMENT`,
@@ -60,7 +53,8 @@ export const UserAction = {
 export const UpdateType = {
   PATCH: `PATCH`,
   MINOR: `MINOR`,
-  MAJOR: `MAJOR`
+  MAJOR: `MAJOR`,
+  INIT: `INIT`
 };
 
 export const FilterType = {
@@ -73,4 +67,23 @@ export const FilterType = {
 export const MenuMode = {
   FILMS: `films`,
   STATISTICS: `statistics`
+};
+
+// servers consts
+
+export const AUTHORIZATION = `Basic fmsldfn4r3nfsda`;
+export const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
+
+export const apiHeaders = {"Content-Type": `application/json`};
+
+export const Method = {
+  GET: `GET`,
+  PUT: `PUT`,
+  POST: `POST`,
+  DELETE: `DELETE`,
+};
+
+export const SuccessHTTPStatusRange = {
+  MIN: 200,
+  MAX: 299,
 };

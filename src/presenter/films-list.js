@@ -3,6 +3,7 @@ import FilmsListView from "../view/films-list.js";
 import ExtraFilmsListView from "../view/extra-films-list.js";
 import ShowMoreButtonView from "../view/show-more-button.js";
 import NoFilmsView from "../view/no-films.js";
+import LoadingBarView from "../view/loading-bar.js";
 import {render, remove} from "../utils/render.js";
 import {UpdateType} from "../consts.js";
 import {getTopCommentedFilms, getTopRatedFilms} from "../mock/extra-films";
@@ -21,10 +22,11 @@ const EXTRA_FILMS = {
 };
 
 export default class FilmsList {
-  constructor(mainContainer, filmsModel, filterModel) {
+  constructor(mainContainer, filmsModel, filterModel, api) {
     this._mainContainer = mainContainer;
     this._filmsModel = filmsModel;
     this._filterModel = filterModel;
+    this._api = api;
 
     this._filmCardPresenter = {};
     this._filmTopCommentedCardPresenter = {};
@@ -33,6 +35,7 @@ export default class FilmsList {
     this._showMoreButtonComponent = new ShowMoreButtonView();
     this._sortComponent = new SortView();
     this._noFilmComponent = new NoFilmsView();
+    this._loadingComponent = new LoadingBarView();
     this._extraFilmsMostCommentedComponent = new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED);
     this._extraFilmsTopRatedComponent = new ExtraFilmsListView(EXTRA_FILMS.TOP_RATED);
     this._handleFilmCardChange = this._handleFilmCardChange.bind(this);
@@ -41,6 +44,7 @@ export default class FilmsList {
     this._handleResetFilmCardDetailsPopups = this._handleResetFilmCardDetailsPopups.bind(this);
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._currentSortType = SortType.DEFAULT;
+    this._isLoading = true;
 
   }
 
@@ -100,6 +104,11 @@ export default class FilmsList {
 
   _handleModelEvent(updateType, film) {
     switch (updateType) {
+      case UpdateType.INIT:
+        this._isLoading = false;
+        remove(this._loadingComponent);
+        this._renderFilmsBoard();
+        break;
       case UpdateType.MINOR:
         this._clearView();
         this._renderFilmsBoard();
@@ -146,6 +155,7 @@ export default class FilmsList {
     }
 
     const removedComponents = [
+      this._loadingComponent,
       this._sortComponent,
       this._filmsListComponent,
       this._noFilmComponent,
@@ -156,6 +166,10 @@ export default class FilmsList {
     for (let component of removedComponents) {
       remove(component);
     }
+  }
+
+  _renderLoading() {
+    render(this._mainContainer, this._loadingComponent);
   }
 
   _renderSort() {
@@ -213,6 +227,11 @@ export default class FilmsList {
 
   _renderFilmsBoard() {
     this._renderSort();
+
+    if (this._isLoading) {
+      this._renderLoading();
+      return;
+    }
 
     if (this._getFilms().length === 0) {
       render(this._mainContainer, this._noFilmComponent);
