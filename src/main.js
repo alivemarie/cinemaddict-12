@@ -8,6 +8,15 @@ import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 import FiltersPresenter from "./presenter/filter";
 import StatisticsView from "./view/statistics";
+import Api from "./api.js";
+
+const AUTHORIZATION = `Basic fmsldfn4r3nfsda`;
+const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
+const api = new Api(END_POINT, AUTHORIZATION);
+
+api.getFilms().then((films) => {
+  console.log(films[0]);
+});
 
 const FILMS_COUNT = {
   ALL_MOVIES: 10,
@@ -15,6 +24,7 @@ const FILMS_COUNT = {
 };
 
 const allMovies = new Array(FILMS_COUNT.ALL_MOVIES).fill().map(generateFilmDetails);
+console.log(allMovies[0]);
 
 const filmsModel = new FilmsModel();
 filmsModel.setFilms(allMovies);
