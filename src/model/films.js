@@ -19,7 +19,7 @@ export default class FilmsModel extends Observer {
           director: film.film_info.director,
           writers: film.film_info.writers.join(`, `),
           actors: film.film_info.actors.join(`, `),
-          releaseDate: film.film_info.release.date,
+          releaseDate: new Date(film.film_info.release.date),
           duration: film.film_info.runtime,
           country: film.film_info.release.release_country,
           genres: film.film_info.genre,
@@ -29,7 +29,7 @@ export default class FilmsModel extends Observer {
           isAddedToWatchlist: film.user_details.watchlist,
           isMarkedAsWatched: film.user_details.already_watched,
           isFavorite: film.user_details.favorite,
-          watchingDate: film.user_details.watching_date
+          watchingDate: film.user_details.watching_date !== null ? new Date(film.user_details.watching_date) : film.user_details.watching_date,
         }
     );
 
@@ -60,7 +60,7 @@ export default class FilmsModel extends Observer {
             "already_watched": film.isMarkedAsWatched,
             "favorite": film.isFavorite,
             "watchlist": film.isAddedToWatchlist,
-            "watching_date": film.watchingDate
+            "watching_date": film.watchingDate instanceof Date ? film.watchingDate.toISOString() : null
           },
           "film_info": {
             "description": film.description,
@@ -72,7 +72,7 @@ export default class FilmsModel extends Observer {
             "total_rating": film.rating,
             "release": {
               "release_country": film.country,
-              "date": film.releaseDate
+              "date": film.releaseDate.toISOString(),
             },
             "genre": film.genres,
             "poster": film.poster,
