@@ -7,6 +7,10 @@ export default class Api {
     this._authorization = authorization;
   }
 
+  getComments(filmId) {
+    return this._load({url: `comments/${filmId}`}).then(Api.toJSON);
+  }
+
   getFilms() {
     return this._load({url: `movies`})
       .then(Api.toJSON)

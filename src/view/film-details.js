@@ -128,7 +128,6 @@ const createFilmDetailsControls = ({
 };
 
 const createFilmDetailsCommentsList = (comments, filmID) => {
-
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
@@ -189,6 +188,9 @@ const createFilmDetailsTemplate = (film) => {
     ageRating,
     comments,
   } = film;
+
+  console.log(film);
+  console.log(film.comments);
 
   const filmInfoHead = createFilmInfoHead(film);
   const filmDetailsTable = createFilmDetailsTable(film);

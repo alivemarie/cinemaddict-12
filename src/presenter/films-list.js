@@ -178,7 +178,7 @@ export default class FilmsList {
   }
 
   _renderFilmCard(container, film) {
-    const filmCardPresenter = new FilmCardPresenter(container, this._handleFilmCardChange, this._handleResetFilmCardDetailsPopups);
+    const filmCardPresenter = new FilmCardPresenter(container, this._handleFilmCardChange, this._handleResetFilmCardDetailsPopups, this._api);
     filmCardPresenter.init(film);
     switch (container) {
       case this._mostCommentedFilmsContainerElement:

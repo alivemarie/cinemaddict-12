@@ -8,10 +8,11 @@ const Mode = {
 };
 
 export default class FilmCard {
-  constructor(filmsContainer, changeData, resetFilmCardDetailsPopups) {
+  constructor(filmsContainer, changeData, resetFilmCardDetailsPopups, api) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
     this._resetFilmCardDetailsPopups = resetFilmCardDetailsPopups;
+    this._api = api;
     this._mode = Mode.DEFAULT;
     this._bodyElement = document.querySelector(`body`);
 
@@ -30,6 +31,11 @@ export default class FilmCard {
 
     const prevFilmCardComponent = this._filmCardComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
+
+    this._api.getComments(this._film.id)
+      .then((comments) => {
+        this._film.comments = comments.slice();
+      });
 
     this._filmCardComponent = new FilmCardView(this._film);
     this._filmDetailsComponent = new FilmDetailsView(this._film);
