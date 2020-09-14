@@ -1,7 +1,14 @@
 import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
-import {generateComment} from "../mock/film.js";
-import {replace, createElement} from "../utils/render.js";
+import {generateComment, getRandomItem, generateId} from "../mock/film.js";
+import {replace, createElement, render} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
+import {COMMENT_AUTHOR} from "../consts.js";
+import he from "he";
+
+const KeyCodes = {
+  ENTER: 13
+};
+
 const TEST_COMMENTS = new Array(3).fill().map(generateComment);
 
 const TEST_FILM_DETAILS = {
@@ -120,7 +127,7 @@ const createFilmDetailsControls = ({
       </section>`;
 };
 
-const createFilmDetailsCommentsList = (comments) => {
+const createFilmDetailsCommentsList = (comments, filmID) => {
 
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
@@ -135,7 +142,7 @@ const createFilmDetailsCommentsList = (comments) => {
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.author}</span>
                 <span class="film-details__comment-day">${showCommentDate(comment.date)}</span>
-                <button class="film-details__comment-delete">Delete</button>
+                <button class="film-details__comment-delete" data-film-id="${filmID}" data-comment-id="${comment.id}">Delete</button>
               </p>
             </div>
           </li>`;
@@ -186,7 +193,7 @@ const createFilmDetailsTemplate = (film) => {
   const filmInfoHead = createFilmInfoHead(film);
   const filmDetailsTable = createFilmDetailsTable(film);
   const filmDetailsControls = createFilmDetailsControls(film);
-  const filmDetailsCommentsList = createFilmDetailsCommentsList(comments);
+  const filmDetailsCommentsList = createFilmDetailsCommentsList(comments, film.id);
   const filmAddingCommentField = createAddingCommentField();
 
   return `<section class="film-details">
@@ -234,11 +241,16 @@ export default class FilmDetails extends AbstractComponentView {
 
     this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
+    this._inputTextCommentHandler = this._inputTextCommentHandler.bind(this);
+    this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setSelectEmojiHandler();
     this._enableIsFavoriteToggler();
     this._enableIsWatchedToggler();
     this._enableIsAddedToWatchlistToggler();
+    this._enableCommentsAdding();
+    this._enableCommentsDeleting();
+    this._setCommentTextInputHandler();
   }
 
   getTemplate() {
@@ -312,11 +324,85 @@ export default class FilmDetails extends AbstractComponentView {
     const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
     if (emoji) {
       emojiContainer.innerHTML = `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+      this._emoji = emoji;
     }
   }
 
+  _inputTextCommentHandler(evt) {
+    evt.preventDefault();
+    this._commentText = evt.target.value;
+  }
+
+  _setCommentTextInputHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._inputTextCommentHandler);
+  }
+
+  _createCommentElement() {
+    const commentTemplate = `<li class="film-details__comment">
+            <span class="film-details__comment-emoji">
+              <img src="./images/emoji/${this._emoji}.png" width="55" height="55" alt="emoji-smile">
+            </span>
+            <div>
+              <p class="film-details__comment-text">${he.encode(this._commentText)}</p>
+              <p class="film-details__comment-info">
+                <span class="film-details__comment-author">${getRandomItem(COMMENT_AUTHOR)}</span>
+                <span class="film-details__comment-day">${showCommentDate(new Date())}</span>
+                <button class="film-details__comment-delete" data-film-id="${this._filmDetails.id}" data-comment-id="${generateId()}">Delete</button>
+              </p>
+            </div>
+          </li>`;
+    return createElement(commentTemplate);
+  }
+
+  _enableCommentsAdding() {
+    const element = this.getElement();
+
+    const addCommentHandler = (evt) => {
+      if (evt.keyCode === KeyCodes.ENTER && evt.ctrlKey) {
+        evt.preventDefault();
+        const commentTextElement = element.querySelector(`.film-details__comment-input`);
+        const commentEmojiElement = element.querySelector(`.film-details__add-emoji-label`);
+
+        commentTextElement.style.outline = this._commentText ? `` : `3px solid red`;
+        commentEmojiElement.style.outline = this._emoji ? `` : `3px solid red`;
+
+        if (this._commentText && this._emoji) {
+          const commentsList = element.querySelector(`.film-details__comments-list`);
+          const comment = this._createCommentElement();
+          comment.addEventListener(`click`, this._deleteClickHandler);
+
+          render(commentsList, comment);
+
+          const commentsCount = element.querySelector(`.film-details__comments-count`);
+          commentsCount.innerHTML = +commentsCount.innerHTML + 1;
+        }
+      }
+    };
+
+    element.querySelector(`.film-details__comment-input`)
+      .addEventListener(`keydown`, addCommentHandler);
+  }
+
+  _deleteClickHandler(evt) {
+    evt.preventDefault();
+    const element = this.getElement();
+    const removedComment = evt.target.closest(`.film-details__comment`);
+    removedComment.remove();
+
+    const commentsCount = element.querySelector(`.film-details__comments-count`);
+    commentsCount.innerHTML = +commentsCount.innerHTML - 1;
+  }
+
+  _enableCommentsDeleting() {
+    const element = this.getElement();
+
+    element.querySelectorAll(`.film-details__comment-delete`).forEach((comment) => {
+      comment.addEventListener(`click`, this._deleteClickHandler);
+    });
+  }
+
   _closeButtonClickHandler() {
-    this._callback.click(this._filmDetails);
+    this._callback.click();
   }
 
   setCloseButtonClickHandler(callback) {

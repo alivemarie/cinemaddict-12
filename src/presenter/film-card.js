@@ -1,6 +1,7 @@
 import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details";
 import {render, remove, replace} from "../utils/render.js";
+
 const Mode = {
   DEFAULT: `DEFAULT`,
   DETAILS: `DETAILS`
@@ -114,7 +115,6 @@ export default class FilmCard {
     if (evt.key === `Escape` || evt.key === `Esc`) {
       evt.preventDefault();
       this._closeDetails();
-      this._changeData(this._film);
     }
   }
 
@@ -128,10 +128,9 @@ export default class FilmCard {
     this._mode = Mode.DETAILS;
   }
 
-  _handleCloseButtonClick(film) {
+  _handleCloseButtonClick() {
     remove(this._filmDetailsComponent);
-    this._changeData(film);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
+    this._mode = Mode.DEFAULT;
   }
-
 }
