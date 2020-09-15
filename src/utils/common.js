@@ -19,4 +19,10 @@ const updateItem = (items, update) => {
   ];
 };
 
-export {getRandomInteger, updateItem};
+const generateId = () => Date.now() + parseInt(Math.random() * 10000, 10);
+
+const getRandomItem = (items) => {
+  return items[getRandomInteger(0, items.length - 1)];
+};
+
+export {getRandomInteger, updateItem, getRandomItem, generateId};

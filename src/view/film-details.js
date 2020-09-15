@@ -1,5 +1,5 @@
 import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
-import {generateComment, getRandomItem, generateId} from "../mock/film.js";
+import {getRandomItem, generateId} from "../utils/common.js";
 import {replace, createElement, render} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
 import {COMMENT_AUTHOR} from "../consts.js";
@@ -7,27 +7,6 @@ import he from "he";
 
 const KeyCodes = {
   ENTER: 13
-};
-
-const TEST_COMMENTS = new Array(3).fill().map(generateComment);
-
-const TEST_FILM_DETAILS = {
-  title: `TEST`,
-  titleOriginal: `TEST`,
-  poster: `./images/posters/made-for-each-other.png`,
-  rating: `6+`,
-  director: `Anthony Mann`,
-  writers: `Billy Wilder`,
-  actors: `Adam Sandler`,
-  country: `USA`,
-  releaseDate: new Date(),
-  duration: `1h 55m`,
-  genres: [`Action`, `Comedy`, `Cartoon`],
-  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  comments: TEST_COMMENTS,
-  isAddedToWatchlist: false,
-  isMarkedAsWatched: false,
-  isFavorite: false
 };
 
 const createFilmInfoHead = (film) => {
@@ -229,7 +208,7 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 export default class FilmDetails extends AbstractComponentView {
-  constructor(filmDetails = TEST_FILM_DETAILS) {
+  constructor(filmDetails) {
     super();
     this._filmDetails = filmDetails;
     this._option = {

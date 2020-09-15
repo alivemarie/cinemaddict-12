@@ -1,22 +1,6 @@
 import {showYearFromDate, showFilmDuration} from "../utils/film.js";
-import {generateComment} from "../mock/film.js";
 import AbstractComponentView from "./abstract-component.js";
 const MAIN_GENRE = 0;
-const TEST_COMMENTS = new Array(3).fill().map(generateComment);
-
-const TEST_FILM = {
-  title: `TEST`,
-  poster: `./images/posters/made-for-each-other.png`,
-  rating: `6+`,
-  releaseDate: new Date(),
-  duration: `1h 55m`,
-  genres: [`Action`, `Comedy`, `Cartoon`],
-  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  comments: TEST_COMMENTS,
-  isAddedToWatchlist: false,
-  isMarkedAsWatched: false,
-  isFavorite: false
-};
 
 const createFilmCardTemplate = (film) => {
   const {
@@ -53,7 +37,7 @@ const createFilmCardTemplate = (film) => {
 };
 
 export default class FilmCard extends AbstractComponentView {
-  constructor(film = TEST_FILM) {
+  constructor(film) {
     super();
     this._film = film;
     this._filmCommentsClickHandler = this._filmCommentsClickHandler.bind(this);
