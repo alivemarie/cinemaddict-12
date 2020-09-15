@@ -54,14 +54,13 @@ const getTotalGenresNumber = (films) => {
 
 const getFilmsNumberByGenres = (films) => {
   const totalGenresNumber = getTotalGenresNumber(films);
-  const values = totalGenresNumber.map((genre) => films.filter((film) => film.genres.includes(genre)).length);
-  const genresCount = [];
 
-  totalGenresNumber.forEach((genre, i) => genresCount.push(
-      {
-        genre,
-        count: values[i],
-      }));
+  const genresCount = totalGenresNumber.map((genre) => {
+    return {
+      genre,
+      count: films.filter((film) => film.genres.includes(genre)).length
+    };
+  });
 
   return genresCount.sort((a, b) => b.count - a.count);
 };

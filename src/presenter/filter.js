@@ -54,26 +54,25 @@ export default class FiltersPresenter {
   }
 
   _handleSiteMenuClick(menuItem, filtersType = null) {
-    switch (menuItem) {
-      case MenuMode.STATISTICS:
-        this._currentMenuMode = MenuMode.STATISTICS;
-        this._statisticBoard = new StatisticsView(this._filmsModel.getFilms());
-        this._statisticBoard.setPeriodClickHandler();
-        render(document.querySelector(`main`), this._statisticBoard);
-        this._filmsListPresenter.destroy(true, true);
-        break;
-      default:
-        this._currentMenuMode = MenuMode.FILMS;
-        if (this._statisticBoard) {
-          remove(this._statisticBoard);
-        }
-        if (this._currentFilter === filtersType) {
-          return;
-        }
-        this._filmsListPresenter.init(SortType.DEFAULT);
-        this._filtersModel.setFilter(UpdateType.MAJOR, filtersType);
-        break;
+
+    if (menuItem === MenuMode.STATISTICS) {
+      this._currentMenuMode = MenuMode.STATISTICS;
+      this._statisticBoard = new StatisticsView(this._filmsModel.getFilms());
+      this._statisticBoard.setPeriodClickHandler();
+      render(document.querySelector(`main`), this._statisticBoard);
+      this._filmsListPresenter.destroy(true, true);
+    } else {
+      this._currentMenuMode = MenuMode.FILMS;
+      if (this._statisticBoard) {
+        remove(this._statisticBoard);
+      }
+      if (this._currentFilter === filtersType) {
+        return;
+      }
+      this._filmsListPresenter.init(SortType.DEFAULT);
+      this._filtersModel.setFilter(UpdateType.MAJOR, filtersType);
     }
+
     this._handleModelEvent();
   }
 
