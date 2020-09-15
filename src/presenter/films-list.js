@@ -135,11 +135,7 @@ export default class FilmsList {
       presenters = {};
     }
 
-    if (resetRenderedFilmCount) {
-      this._renderedFilmCards = FILM_COUNT_PER_STEP;
-    } else {
-      this._renderedFilmCards = Math.min(filmCount, this._renderedFilmCards);
-    }
+    this._renderedFilmCards = resetRenderedFilmCount ? FILM_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmCards);
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;
