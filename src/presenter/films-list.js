@@ -88,18 +88,13 @@ export default class FilmsList {
       .forEach((presenter) => presenter.resetDetails());
   }
 
-  _handleFilmCardChange(updatedFilm) {
-    this._filmsModel.updateFilm(null, updatedFilm);
-
-    if (this._filmTopRatedCardPresenter[updatedFilm.id]) {
-      this._filmTopRatedCardPresenter[updatedFilm.id].init(updatedFilm);
-    }
-    if (this._filmTopCommentedCardPresenter[updatedFilm.id]) {
-      this._filmTopCommentedCardPresenter[updatedFilm.id].init(updatedFilm);
-    }
-    if (this._filmCardPresenter[updatedFilm.id]) {
-      this._filmCardPresenter[updatedFilm.id].init(updatedFilm);
-    }
+  _handleFilmCardChange(updateFilm) {
+    this._api.updateFilm(updateFilm).then((response) => {
+      const updatedFilm = Object.assign({}, response, {
+        comments: updateFilm.comments
+      });
+      this._filmsModel.updateFilm(UpdateType.PATCH, updatedFilm);
+    });
   }
 
   _handleModelEvent(updateType, film) {
@@ -109,16 +104,20 @@ export default class FilmsList {
         remove(this._loadingComponent);
         this._renderFilmsBoard();
         break;
-      case UpdateType.MINOR:
-        this._clearView();
-        this._renderFilmsBoard();
-        break;
       case UpdateType.MAJOR:
         this._clearView({resetRenderedFilmCount: true, resetSortType: true});
         this._renderFilmsBoard();
         break;
       default:
-        this._filmCardPresenter[film.id].init(film);
+        if (this._filmTopRatedCardPresenter[film.id]) {
+          this._filmTopRatedCardPresenter[film.id].init(film);
+        }
+        if (this._filmTopCommentedCardPresenter[film.id]) {
+          this._filmTopCommentedCardPresenter[film.id].init(film);
+        }
+        if (this._filmCardPresenter[film.id]) {
+          this._filmCardPresenter[film.id].init(film);
+        }
         break;
     }
   }

@@ -56,7 +56,7 @@ export default class FilmsModel extends Observer {
         {},
         film,
         {
-          "comments": film.comments,
+          "comments": film.commentsIds,
           "user_details": {
             "already_watched": film.isMarkedAsWatched,
             "favorite": film.isFavorite,
@@ -103,7 +103,6 @@ export default class FilmsModel extends Observer {
     delete adaptedFilm.titleOriginal;
     delete adaptedFilm.writers;
     delete adaptedFilm.actors;
-    delete adaptedFilm.comments;
     delete adaptedFilm.watching_date;
 
     return adaptedFilm;

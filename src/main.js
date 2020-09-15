@@ -33,14 +33,10 @@ const filtersPresenter = new FiltersPresenter(siteMainElement, filterModel, film
 
 filmsListPresenter.init();
 
-const statisticsComponent = new StatisticsView(filmsModel.getFilms());
-// render(siteMainElement, statisticsComponent);
-
 const footerStatistics = document.querySelector(`.footer__statistics`);
 
 api.getFilms()
   .then((films) => {
-    console.log(films);
     filmsModel.setFilms(UpdateType.INIT, films);
     filtersPresenter.init();
     render(footerStatistics, new FooterStatisticsView(films.length), RenderPosition.AFTERBEGIN);

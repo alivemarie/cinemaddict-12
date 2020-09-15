@@ -2,8 +2,8 @@ const START_INDEX = 0;
 const ITEMS_QUANTITY = 2;
 
 const getTopCommentedFilms = (films) => {
-  const sortedFilmsByComments = films.slice().sort((firstItem, secondItem) => secondItem.comments.length - firstItem.comments.length);
-  const topCommented = sortedFilmsByComments.filter((film) => film.comments.length > 0);
+  const sortedFilmsByComments = films.slice().sort((firstItem, secondItem) => secondItem.commentsIds.length - firstItem.commentsIds.length);
+  const topCommented = sortedFilmsByComments.filter((film) => film.commentsIds.length > 0);
   return topCommented.splice(START_INDEX, ITEMS_QUANTITY);
 };
 
