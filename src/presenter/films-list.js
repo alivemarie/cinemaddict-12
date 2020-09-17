@@ -42,12 +42,21 @@ export default class FilmsList {
     this._handleModelEvent = this._handleModelEvent.bind(this);
     this._currentSortType = SortType.DEFAULT;
 
+  }
+
+  init(sortType) {
+    this._renderFilmsBoard();
+    this._handleSortTypeChange(sortType);
+    this._currentSortType = sortType;
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
 
-  init() {
-    this._renderFilmsBoard();
+  destroy() {
+    this._clearView(true, true);
+
+    this._filmsModel.removeObserver(this._handleModelEvent);
+    this._filterModel.removeObserver(this._handleModelEvent);
   }
 
   _getFilms() {
@@ -126,11 +135,7 @@ export default class FilmsList {
       presenters = {};
     }
 
-    if (resetRenderedFilmCount) {
-      this._renderedFilmCards = FILM_COUNT_PER_STEP;
-    } else {
-      this._renderedFilmCards = Math.min(filmCount, this._renderedFilmCards);
-    }
+    this._renderedFilmCards = resetRenderedFilmCount ? FILM_COUNT_PER_STEP : Math.min(filmCount, this._renderedFilmCards);
 
     if (resetSortType) {
       this._currentSortType = SortType.DEFAULT;

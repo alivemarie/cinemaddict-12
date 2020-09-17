@@ -75,6 +75,7 @@ export const generateFilmDetails = () => {
   const isAddedToWatchlist = Boolean(getRandomInteger(0, 1));
   const isMarkedAsWatched = Boolean(getRandomInteger(0, 1));
   const isFavorite = Boolean(getRandomInteger(0, 1));
+  const watchingDate = randomDate(new Date(2020, 7, 15), new Date());
   return {
     id,
     title,
@@ -93,7 +94,8 @@ export const generateFilmDetails = () => {
     comments,
     isAddedToWatchlist,
     isMarkedAsWatched,
-    isFavorite
+    isFavorite,
+    watchingDate
   };
 };
 

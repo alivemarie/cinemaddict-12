@@ -22,7 +22,7 @@ const USER_RATING_TITLE = {
   }
 };
 
-const matchRatingWithRank = (rating) => {
+export const matchRatingWithRank = (rating) => {
 
   let ratingTitle;
 
