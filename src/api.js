@@ -1,14 +1,5 @@
 import FilmsModel from "./model/films.js";
-
-const Method = {
-  GET: `GET`,
-  PUT: `PUT`
-};
-
-const SuccessHTTPStatusRange = {
-  MIN: 200,
-  MAX: 299
-};
+import {Method, apiHeaders, SuccessHTTPStatusRange} from "./consts";
 
 export default class Api {
   constructor(endPoint, authorization) {
@@ -16,20 +7,49 @@ export default class Api {
     this._authorization = authorization;
   }
 
+  getComments(filmId) {
+    return this._load({url: `comments/${filmId}`}).then(Api.toJSON);
+  }
+
   getFilms() {
     return this._load({url: `movies`})
       .then(Api.toJSON)
-      .then((films) => films.map(FilmsModel.adaptToClient));
+      .then((films) => {
+        return films.map(FilmsModel.adaptToClient);
+      });
   }
 
   updateFilm(film) {
     return this._load({
       url: `movies/${film.id}`,
       method: Method.PUT,
-      body: JSON.stringify(film),
-      headers: new Headers({"Content-Type": `application/json`})
+      body: JSON.stringify(FilmsModel.adaptToServer(film)),
+      headers: new Headers(apiHeaders),
     })
-      .then(Api.toJSON);
+      .then(Api.toJSON)
+      .then(FilmsModel.adaptToClient);
+  }
+
+  addComment(film, comment) {
+    return this._load({
+      url: `comments/${film.id}`,
+      method: Method.POST,
+      body: JSON.stringify(comment),
+      headers: new Headers(apiHeaders)
+    })
+      .then(Api.toJSON)
+      .then((response) => {
+        const updatedFilm = FilmsModel.adaptToClient(response.movie);
+        updatedFilm.comments = response.comments;
+        return updatedFilm;
+      });
+  }
+
+  deleteComment(commentId) {
+    return this._load({
+      url: `comments/${commentId}`,
+      method: Method.DELETE
+    });
   }
 
   _load({

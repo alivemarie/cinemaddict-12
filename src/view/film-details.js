@@ -1,5 +1,5 @@
 import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
-import {generateComment, getRandomItem, generateId} from "../mock/film.js";
+import {getRandomItem, generateId} from "../utils/common.js";
 import {replace, createElement, render} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
 import {COMMENT_AUTHOR} from "../consts.js";
@@ -7,27 +7,6 @@ import he from "he";
 
 const KeyCodes = {
   ENTER: 13
-};
-
-const TEST_COMMENTS = new Array(3).fill().map(generateComment);
-
-const TEST_FILM_DETAILS = {
-  title: `TEST`,
-  titleOriginal: `TEST`,
-  poster: `./images/posters/made-for-each-other.png`,
-  rating: `6+`,
-  director: `Anthony Mann`,
-  writers: `Billy Wilder`,
-  actors: `Adam Sandler`,
-  country: `USA`,
-  releaseDate: new Date(),
-  duration: `1h 55m`,
-  genres: [`Action`, `Comedy`, `Cartoon`],
-  description: `Lorem ipsum dolor sit amet, consectetur adipiscing elit.`,
-  comments: TEST_COMMENTS,
-  isAddedToWatchlist: false,
-  isMarkedAsWatched: false,
-  isFavorite: false
 };
 
 const createFilmInfoHead = (film) => {
@@ -128,17 +107,16 @@ const createFilmDetailsControls = ({
 };
 
 const createFilmDetailsCommentsList = (comments, filmID) => {
-
   return `<h3 class="film-details__comments-title">Comments <span class="film-details__comments-count">${comments.length}</span></h3>
 
         <ul class="film-details__comments-list">
         ${comments.map((comment) => {
     return `<li class="film-details__comment">
             <span class="film-details__comment-emoji">
-              <img src="${comment.emoji}" width="55" height="55" alt="emoji-smile">
+              <img src="./images/emoji/${comment.emotion}.png" width="55" height="55" alt="emoji-smile">
             </span>
             <div>
-              <p class="film-details__comment-text">${comment.text}</p>
+              <p class="film-details__comment-text">${comment.comment}</p>
               <p class="film-details__comment-info">
                 <span class="film-details__comment-author">${comment.author}</span>
                 <span class="film-details__comment-day">${showCommentDate(comment.date)}</span>
@@ -230,7 +208,7 @@ const createFilmDetailsTemplate = (film) => {
 };
 
 export default class FilmDetails extends AbstractComponentView {
-  constructor(filmDetails = TEST_FILM_DETAILS) {
+  constructor(filmDetails) {
     super();
     this._filmDetails = filmDetails;
     this._option = {
@@ -245,11 +223,8 @@ export default class FilmDetails extends AbstractComponentView {
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setSelectEmojiHandler();
-    this._enableIsFavoriteToggler();
-    this._enableIsWatchedToggler();
-    this._enableIsAddedToWatchlistToggler();
     this._enableCommentsAdding();
-    this._enableCommentsDeleting();
+    this.setCommentsDeleteHandler();
     this._setCommentTextInputHandler();
   }
 
@@ -257,57 +232,75 @@ export default class FilmDetails extends AbstractComponentView {
     return createFilmDetailsTemplate(this._filmDetails);
   }
 
-  _enableIsFavoriteToggler() {
+  enableIsFavoriteToggler(changeData) {
     const element = this.getElement();
 
     const isFavoriteToggleHandler = (evt) => {
       evt.preventDefault();
 
-      const oldIsFavoriteElement = element.querySelector(`#favorite`);
-
-      const updatedIsFavoriteElement = createElement(createIsFavoriteControl(!this._option.isFavorite));
-
-      replace(updatedIsFavoriteElement, oldIsFavoriteElement);
       this._option.isFavorite = !this._option.isFavorite;
-      this._filmDetails.isFavorite = !this._filmDetails.isFavorite;
+      changeData(
+          Object.assign(
+              {},
+              this._filmDetails,
+              {
+                isFavorite: !this._filmDetails.isFavorite
+              }
+          )
+      );
+      const oldIsFavoriteElement = element.querySelector(`#favorite`);
+      const updatedIsFavoriteElement = createElement(createIsFavoriteControl(this._filmDetails.isFavorite));
+      replace(updatedIsFavoriteElement, oldIsFavoriteElement);
     };
 
     element.querySelector(`.film-details__control-label--favorite`)
       .addEventListener(`click`, isFavoriteToggleHandler);
   }
 
-  _enableIsWatchedToggler() {
+  enableIsWatchedToggler(changeData) {
     const element = this.getElement();
 
     const isWatchedToggleHandler = (evt) => {
       evt.preventDefault();
 
-      const oldIsWatchedElement = element.querySelector(`#watched`);
-
-      const updatedIsFavoriteElement = createElement(createIsWatchedControl(!this._option.isWatched));
-
-      replace(updatedIsFavoriteElement, oldIsWatchedElement);
       this._option.isWatched = !this._option.isWatched;
-      this._filmDetails.isMarkedAsWatched = !this._filmDetails.isMarkedAsWatched;
+      changeData(
+          Object.assign(
+              {},
+              this._filmDetails,
+              {
+                isMarkedAsWatched: !this._filmDetails.isMarkedAsWatched
+              }
+          )
+      );
+      const oldIsWatchedElement = element.querySelector(`#watched`);
+      const updatedIsWatchedElement = createElement(createIsWatchedControl(this._filmDetails.isMarkedAsWatched));
+      replace(updatedIsWatchedElement, oldIsWatchedElement);
     };
 
     element.querySelector(`.film-details__control-label--watched`)
       .addEventListener(`click`, isWatchedToggleHandler);
   }
 
-  _enableIsAddedToWatchlistToggler() {
+  enableIsAddedToWatchlistToggler(changeData) {
     const element = this.getElement();
 
     const addToWatchlistToggleHandler = (evt) => {
       evt.preventDefault();
 
-      const oldIsAddedToWatchlistElement = element.querySelector(`#watchlist`);
-
-      const updatedIsAddedToWatchlistElement = createElement(createAddToWatchlistControl(!this._option.isAddedToWatchlist));
-
-      replace(updatedIsAddedToWatchlistElement, oldIsAddedToWatchlistElement);
       this._option.isAddedToWatchlist = !this._option.isAddedToWatchlist;
-      this._filmDetails.isAddedToWatchlist = !this._filmDetails.isAddedToWatchlist;
+      changeData(
+          Object.assign(
+              {},
+              this._filmDetails,
+              {
+                isAddedToWatchlist: !this._filmDetails.isAddedToWatchlist
+              }
+          )
+      );
+      const oldIsAddedToWatchlistElement = element.querySelector(`#watchlist`);
+      const updatedIsAddedToWatchlistElement = createElement(createAddToWatchlistControl(this._filmDetails.isAddedToWatchlist));
+      replace(updatedIsAddedToWatchlistElement, oldIsAddedToWatchlistElement);
     };
 
     element.querySelector(`.film-details__control-label--watchlist`)
@@ -387,13 +380,16 @@ export default class FilmDetails extends AbstractComponentView {
     evt.preventDefault();
     const element = this.getElement();
     const removedComment = evt.target.closest(`.film-details__comment`);
+    // this._commentDeleteCallback(evt.target.dataset.commentId);
     removedComment.remove();
 
     const commentsCount = element.querySelector(`.film-details__comments-count`);
     commentsCount.innerHTML = +commentsCount.innerHTML - 1;
   }
 
-  _enableCommentsDeleting() {
+  setCommentsDeleteHandler(callback) {
+    this._commentDeleteCallback = callback;
+
     const element = this.getElement();
 
     element.querySelectorAll(`.film-details__comment-delete`).forEach((comment) => {
