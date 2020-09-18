@@ -20,7 +20,6 @@ export default class FilmCard {
     this._resetFilmCardDetailsPopups = resetFilmCardDetailsPopups;
     this._api = api;
     this._mode = Mode.DEFAULT;
-    this._isAddAborted = false;
     this._bodyElement = document.querySelector(`body`);
 
     this._filmCardComponent = null;
@@ -153,7 +152,7 @@ export default class FilmCard {
     this._filmDetailsComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
 
     this._filmDetailsComponent.setCommentsDeleteHandler(this._handleDeleteCommentClick);
-    this._filmDetailsComponent.setCommentSubmitHandler(this._handleFormSubmit, this._isAddAborted);
+    this._filmDetailsComponent.setCommentSubmitHandler(this._handleFormSubmit);
     this._filmDetailsComponent.enableIsWatchedToggler(this._changeData);
     this._filmDetailsComponent.enableIsFavoriteToggler(this._changeData);
     this._filmDetailsComponent.enableIsAddedToWatchlistToggler(this._changeData);
@@ -207,7 +206,6 @@ export default class FilmCard {
       .catch(() => {
         this._film.comments = [];
         this._renderFilmDetailsComponent();
-        this._isAddAborted = !this._isAddAborted;
       });
   }
 
