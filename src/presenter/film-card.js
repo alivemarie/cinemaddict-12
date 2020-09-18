@@ -29,6 +29,7 @@ export default class FilmCard {
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleAddToWatchlistClick = this._handleAddToWatchlistClick.bind(this);
     this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleCommentsClick = this._handleCommentsClick.bind(this);
     this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
@@ -146,15 +147,28 @@ export default class FilmCard {
     this._filmDetailsComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
 
     this._filmDetailsComponent.setCommentsDeleteHandler(this._handleDeleteCommentClick);
+    this._filmDetailsComponent.setCommentSubmitHandler(this._handleFormSubmit, this._isAddAborted);
     this._filmDetailsComponent.enableIsWatchedToggler(this._changeData);
     this._filmDetailsComponent.enableIsFavoriteToggler(this._changeData);
     this._filmDetailsComponent.enableIsAddedToWatchlistToggler(this._changeData);
 
-    // this._filmDetailsComponent.setCommentsDeleteHandler(this._api.deleteComment);
-
     render(this._bodyElement, this._filmDetailsComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DETAILS;
+  }
+
+  _handleFormSubmit(emoji, commentText) {
+    const newComment = {
+      emotion: emoji,
+      date: new Date(),
+      comment: commentText,
+    };
+    this._changeData(
+        this._film,
+        UserAction.ADD_COMMENT,
+        UpdateType.PATCH,
+        newComment
+    );
   }
 
   _handleDeleteCommentClick(commentId) {
@@ -187,6 +201,7 @@ export default class FilmCard {
       .catch(() => {
         this._film.comments = [];
         this._renderFilmDetailsComponent();
+        this._isAddAborted = !this._isAddAborted;
       });
   }
 

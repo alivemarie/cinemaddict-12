@@ -1,8 +1,6 @@
 import {showFullReleaseDate, showCommentDate} from "../utils/film.js";
-import {getRandomItem, generateId} from "../utils/common.js";
-import {replace, createElement, render} from "../utils/render.js";
+import {replace, createElement} from "../utils/render.js";
 import AbstractComponentView from "./abstract-component.js";
-import {COMMENT_AUTHOR} from "../consts.js";
 import he from "he";
 
 const ERROR_ANIMATION_TIMEOUT = 3000;
@@ -224,7 +222,6 @@ export default class FilmDetails extends AbstractComponentView {
     this._deleteClickHandler = this._deleteClickHandler.bind(this);
 
     this._setSelectEmojiHandler();
-    this._enableCommentsAdding();
     this._setCommentTextInputHandler();
   }
 
@@ -321,33 +318,21 @@ export default class FilmDetails extends AbstractComponentView {
     }
   }
 
+  _setCommentTextInputHandler() {
+    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._inputTextCommentHandler);
+  }
+
   _inputTextCommentHandler(evt) {
     evt.preventDefault();
     this._commentText = evt.target.value;
   }
 
-  _setCommentTextInputHandler() {
-    this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._inputTextCommentHandler);
+  setCommentSubmitHandler(callback) {
+    this._formSubmit = callback;
+    this._commentSubmitHandler();
   }
 
-  _createCommentElement() {
-    const commentTemplate = `<li class="film-details__comment">
-            <span class="film-details__comment-emoji">
-              <img src="./images/emoji/${this._emoji}.png" width="55" height="55" alt="emoji-smile">
-            </span>
-            <div>
-              <p class="film-details__comment-text">${he.encode(this._commentText)}</p>
-              <p class="film-details__comment-info">
-                <span class="film-details__comment-author">${getRandomItem(COMMENT_AUTHOR)}</span>
-                <span class="film-details__comment-day">${showCommentDate(new Date())}</span>
-                <button class="film-details__comment-delete" data-film-id="${this._filmDetails.id}" data-comment-id="${generateId()}">Delete</button>
-              </p>
-            </div>
-          </li>`;
-    return createElement(commentTemplate);
-  }
-
-  _enableCommentsAdding() {
+  _commentSubmitHandler() {
     const element = this.getElement();
 
     const addCommentHandler = (evt) => {
@@ -360,14 +345,8 @@ export default class FilmDetails extends AbstractComponentView {
         commentEmojiElement.style.outline = this._emoji ? `` : `3px solid red`;
 
         if (this._commentText && this._emoji) {
-          const commentsList = element.querySelector(`.film-details__comments-list`);
-          const comment = this._createCommentElement();
-          // comment.addEventListener(`click`, this._deleteClickHandler);
-
-          render(commentsList, comment);
-
-          const commentsCount = element.querySelector(`.film-details__comments-count`);
-          commentsCount.innerHTML = +commentsCount.innerHTML + 1;
+          this.getElement().querySelector(`.film-details__inner`).setAttribute(`disabled`, `disabled`);
+          this._formSubmit(this._emoji, he.encode(this._commentText));
         }
       }
     };
@@ -378,14 +357,11 @@ export default class FilmDetails extends AbstractComponentView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-
     if (evt.target.tagName === `BUTTON`) {
       this._currentDeleteButton = evt.target;
       this._commentDeletingClick(evt.target.dataset.commentId);
       evt.target.innerHTML = `Deleting...`;
       evt.target.setAttribute(`disabled`, `disabled`);
-
-      // commentsCount.innerHTML = +commentsCount.innerHTML - 1;
     }
   }
 
