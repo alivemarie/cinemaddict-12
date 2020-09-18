@@ -345,7 +345,7 @@ export default class FilmDetails extends AbstractComponentView {
         commentEmojiElement.style.outline = this._emoji ? `` : `3px solid red`;
 
         if (this._commentText && this._emoji) {
-          this.getElement().querySelector(`.film-details__inner`).setAttribute(`disabled`, `disabled`);
+          this.getElement().querySelector(`.film-details__comment-input`).disabled = true;
           this._formSubmit(this._emoji, he.encode(this._commentText));
         }
       }
@@ -361,7 +361,7 @@ export default class FilmDetails extends AbstractComponentView {
       this._currentDeleteButton = evt.target;
       this._commentDeletingClick(evt.target.dataset.commentId);
       evt.target.innerHTML = `Deleting...`;
-      evt.target.setAttribute(`disabled`, `disabled`);
+      evt.target.disabled = true;
     }
   }
 
@@ -382,16 +382,16 @@ export default class FilmDetails extends AbstractComponentView {
     this._currentDeletingComment.style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
     setTimeout(() => {
       this._currentDeletingComment.style.animation = ``;
-      this._currentDeleteButton.removeAttribute(`disabled`);
+      this._currentDeleteButton.disabled = false;
       this._currentDeleteButton.innerHTML = `Delete`;
     }, ERROR_ANIMATION_TIMEOUT);
   }
 
   setFormErrorHandler() {
-    this.getElement().style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
+    this.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
     setTimeout(() => {
-      this.getElement().style.animation = ``;
-      this.getElement().querySelector(`.film-details__wrapper`).removeAttribute(`disabled`);
+      this.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
+      this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
     }, ERROR_ANIMATION_TIMEOUT);
   }
 

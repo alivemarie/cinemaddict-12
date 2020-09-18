@@ -123,7 +123,6 @@ export default class FilmsModel extends Observer {
     if (index === -1) {
       throw new Error(`Can't update unexisting films`);
     }
-
     this._films = [
       ...this._films.slice(0, index),
       update,

@@ -59,19 +59,16 @@ const replace = (newChild, oldChild) => {
   parent.replaceChild(newChild, oldChild);
 };
 
-const START_INDEX = 0;
-const ITEMS_QUANTITY = 2;
-
-const getTopCommentedFilms = (films) => {
+const getMostCommentedFilms = (films) => {
   const sortedFilmsByComments = films.slice().sort((firstItem, secondItem) => secondItem.commentsIds.length - firstItem.commentsIds.length);
-  const topCommented = sortedFilmsByComments.filter((film) => film.commentsIds.length > 0);
-  return topCommented.splice(START_INDEX, ITEMS_QUANTITY);
+  const mostCommented = sortedFilmsByComments.filter((film) => film.commentsIds.length > 0);
+  return mostCommented;
 };
 
 const getTopRatedFilms = (films) => {
-  const sortedFilmsByComments = films.slice().sort((firstItem, secondItem) => secondItem.rating - firstItem.rating);
-  const topRated = sortedFilmsByComments.filter((film) => film.rating > 0);
-  return topRated.splice(START_INDEX, ITEMS_QUANTITY);
+  const sortedFilmsByRating = films.slice().sort((firstItem, secondItem) => secondItem.rating - firstItem.rating);
+  const topRated = sortedFilmsByRating.filter((film) => film.rating > 0);
+  return topRated;
 };
 
-export {render, RenderPosition, createElement, renderTemplate, remove, replace, getTopCommentedFilms, getTopRatedFilms};
+export {render, RenderPosition, createElement, renderTemplate, remove, replace, getMostCommentedFilms, getTopRatedFilms};

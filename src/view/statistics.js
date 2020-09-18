@@ -3,11 +3,8 @@ import {matchRatingWithRank} from "./profile.js";
 import {FilterType} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import moment from "moment";
-import Chart from "chart.js";
-import ChartDataLabels from 'chartjs-plugin-datalabels';
-import {getUserRating} from "../mock/user";
-
-const BAR_HEIGHT = 50;
+import {getUserRating} from "../mock/user.js";
+import {renderChart} from "../utils/chart.js";
 
 const TimeFilter = {
   ALLTIME: {
@@ -66,72 +63,6 @@ const getFilmsNumberByGenres = (films) => {
 };
 
 const getTopGenre = (films) => getFilmsNumberByGenres(films)[0].genre;
-
-const renderChart = (films, statisticCtx) => {
-
-  statisticCtx.height = BAR_HEIGHT * getTotalGenresNumber(films).length;
-
-  if (!films.length) {
-    return `No movies`;
-  }
-
-  return new Chart(statisticCtx, {
-    plugins: [ChartDataLabels],
-    type: `horizontalBar`,
-    data: {
-      labels: getFilmsNumberByGenres(films).map((genre) => genre.genre),
-      datasets: [{
-        data: getFilmsNumberByGenres(films).map((genre) => genre.count),
-        backgroundColor: `#ffe800`,
-        hoverBackgroundColor: `#ffe800`,
-        anchor: `start`
-      }]
-    },
-    options: {
-      plugins: {
-        datalabels: {
-          font: {
-            size: 20
-          },
-          color: `#ffffff`,
-          anchor: `start`,
-          align: `start`,
-          offset: 40,
-        }
-      },
-      scales: {
-        yAxes: [{
-          ticks: {
-            fontColor: `#ffffff`,
-            padding: 100,
-            fontSize: 20
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-          barThickness: 24
-        }],
-        xAxes: [{
-          ticks: {
-            display: false,
-            beginAtZero: true
-          },
-          gridLines: {
-            display: false,
-            drawBorder: false
-          },
-        }],
-      },
-      legend: {
-        display: false
-      },
-      tooltips: {
-        enabled: false
-      }
-    }
-  });
-};
 
 const createStatisticFilterTemplate = (statisticFilter, isChecked) => {
   const {name, label} = statisticFilter;
@@ -205,12 +136,18 @@ export default class StatisticsView extends AbstractComponentView {
 
     this._changePeriodClickHandler = this._changePeriodClickHandler.bind(this);
     this._showChart = this._showChart.bind(this);
+
     this._ctx = this.getElement().querySelector(`.statistic__chart`);
+
+
     this._showChart(this._allWatchedFilms, this._ctx);
   }
 
   _showChart(films, ctx) {
-    renderChart(films, ctx);
+    this._totalGenresNumber = getTotalGenresNumber(films).length;
+    this._labels = getFilmsNumberByGenres(films).map((genre) => genre.genre);
+    this._data = getFilmsNumberByGenres(films).map((genre) => genre.count);
+    renderChart(films, ctx, this._totalGenresNumber, this._labels, this._data);
   }
 
   _changePeriodClickHandler(evt) {

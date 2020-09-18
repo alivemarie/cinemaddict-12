@@ -46,7 +46,6 @@ export default class FilmCard {
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setAddToWatchlistClickHandler(this._handleAddToWatchlistClick);
-
     if (prevFilmCardComponent === null) {
       render(this._filmsContainer, this._filmCardComponent);
       return;
@@ -54,6 +53,7 @@ export default class FilmCard {
 
     if (this._filmsContainer.contains(prevFilmCardComponent.getElement())) {
       replace(this._filmCardComponent, prevFilmCardComponent);
+
     }
 
     if (prevFilmDetailsComponent) {
@@ -94,7 +94,9 @@ export default class FilmCard {
             {
               isFavorite: !this._film.isFavorite
             }
-        )
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
     );
   }
 
@@ -106,7 +108,9 @@ export default class FilmCard {
             {
               isMarkedAsWatched: !this._film.isMarkedAsWatched
             }
-        )
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
     );
   }
 
@@ -118,7 +122,9 @@ export default class FilmCard {
             {
               isAddedToWatchlist: !this._film.isAddedToWatchlist
             }
-        )
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
     );
   }
 
