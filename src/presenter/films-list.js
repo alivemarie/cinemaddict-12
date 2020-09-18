@@ -8,8 +8,9 @@ import {render, remove, getTopCommentedFilms, getTopRatedFilms} from "../utils/r
 import {UpdateType} from "../consts.js";
 import {sortFilmsByRating, sortFilmsByDate} from "../utils/film.js";
 import {SortType} from '../consts.js';
-import FilmCardPresenter from "./film-card";
-import {filter} from "../utils/filter";
+import FilmCardPresenter, {Error as FilmPresenterError} from "./film-card.js";
+import {filter} from "../utils/filter.js";
+import {UserAction} from "../consts.js";
 const FILM_COUNT_PER_STEP = 5;
 const FILMS_COUNT = {
   ALL_MOVIES: 30,
@@ -87,7 +88,24 @@ export default class FilmsList {
       .forEach((presenter) => presenter.resetDetails());
   }
 
-  _handleFilmCardChange(updateFilm) {
+  _handleFilmCardChange(updateFilm, userAction, updateType, updateComment) {
+    if (userAction === UserAction.REMOVE_COMMENT) {
+      this._api.deleteComment(updateComment).then(() => {
+        this._filmsModel.deleteComment(updateType, updateFilm, updateComment);
+      }).catch(() => {
+        this._filmCardPresenter[updateFilm.id].setErrorHandler(FilmPresenterError.DELETING);
+      });
+      return;
+    }
+
+    if (userAction === UserAction.ADD_COMMENT) {
+      this._api.addComment(updateFilm, updateComment).then((response) => {
+        this._filmsModel.addComment(updateType, updateFilm, response.comments);
+      }).catch(() => {
+        this._filmCardPresenter[updateFilm.id].setErrorHandler(FilmPresenterError.ADDING);
+      });
+      return;
+    }
     this._api.updateFilm(updateFilm).then((response) => {
       const updatedFilm = Object.assign({}, response, {
         comments: updateFilm.comments
@@ -177,9 +195,11 @@ export default class FilmsList {
     switch (container) {
       case this._mostCommentedFilmsContainerElement:
         this._filmTopCommentedCardPresenter[film.id] = filmCardPresenter;
+        this._filmCardPresenter[film.id] = filmCardPresenter;
         break;
       case this._topRatedFilmsContainerElement:
         this._filmTopRatedCardPresenter[film.id] = filmCardPresenter;
+        this._filmCardPresenter[film.id] = filmCardPresenter;
         break;
       default:
         this._filmCardPresenter[film.id] = filmCardPresenter;

@@ -135,18 +135,24 @@ export default class FilmsModel extends Observer {
 
   deleteComment(updateType, updateFilm, commentId) {
     const filmIndex = this._films.findIndex((film) => film.id === updateFilm.id);
-    const commentIndex = updateFilm.comments.findIndex((comment) => comment.id === commentId);
-
+    const commentIndex = updateFilm.commentsIds.findIndex((comment) => comment === commentId);
+    console.log(commentIndex, updateFilm.commentsIds);
     if (filmIndex === -1) {
       throw new Error(`Can't update unexisting films`);
     }
+    // this._films[filmIndex] = Object.assign({}, this._films[filmIndex], {
+    //   comments: [
+    //     ...this._films.slice()[filmIndex].comments.slice(0, commentIndex),
+    //     ...this._films.slice()[filmIndex].comments.slice(commentIndex + 1)
+    //   ]
+    // });
 
-    this._films[filmIndex] = Object.assign({}, this._films[filmIndex], {
-      comments: [
-        ...this._films.slice()[filmIndex].comments.slice(0, commentIndex),
-        ...this._films.slice()[filmIndex].comments.slice(commentIndex + 1)
-      ]
-    });
+    // this._films[filmIndex] = Object.assign({}, this._films[filmIndex], {
+    //   commentsIds: [
+    //     ...this._films.slice()[filmIndex].commentsIds.slice(0, commentIndex),
+    //     ...this._films.slice()[filmIndex].commentsIds.slice(commentIndex + 1)
+    //   ]
+    // });
 
     this._notify(updateType, updateFilm);
   }
@@ -155,7 +161,7 @@ export default class FilmsModel extends Observer {
     const filmIndex = this._films.findIndex((film) => film.id === updateFilm.id);
 
     this._films[filmIndex].comments = newComments;
-
+    this._films[filmIndex].commentsIds = newComments.map((comment) => comment.id);
     this._notify(updateType, updateFilm);
   }
 }

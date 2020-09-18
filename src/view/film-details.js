@@ -5,6 +5,7 @@ import AbstractComponentView from "./abstract-component.js";
 import {COMMENT_AUTHOR} from "../consts.js";
 import he from "he";
 
+const ERROR_ANIMATION_TIMEOUT = 3000;
 const KeyCodes = {
   ENTER: 13
 };
@@ -224,7 +225,6 @@ export default class FilmDetails extends AbstractComponentView {
 
     this._setSelectEmojiHandler();
     this._enableCommentsAdding();
-    this.setCommentsDeleteHandler();
     this._setCommentTextInputHandler();
   }
 
@@ -362,7 +362,7 @@ export default class FilmDetails extends AbstractComponentView {
         if (this._commentText && this._emoji) {
           const commentsList = element.querySelector(`.film-details__comments-list`);
           const comment = this._createCommentElement();
-          comment.addEventListener(`click`, this._deleteClickHandler);
+          // comment.addEventListener(`click`, this._deleteClickHandler);
 
           render(commentsList, comment);
 
@@ -378,23 +378,45 @@ export default class FilmDetails extends AbstractComponentView {
 
   _deleteClickHandler(evt) {
     evt.preventDefault();
-    const element = this.getElement();
-    const removedComment = evt.target.closest(`.film-details__comment`);
-    // this._commentDeleteCallback(evt.target.dataset.commentId);
-    removedComment.remove();
 
-    const commentsCount = element.querySelector(`.film-details__comments-count`);
-    commentsCount.innerHTML = +commentsCount.innerHTML - 1;
+    if (evt.target.tagName === `BUTTON`) {
+      this._currentDeleteButton = evt.target;
+      this._commentDeletingClick(evt.target.dataset.commentId);
+      evt.target.innerHTML = `Deleting...`;
+      evt.target.setAttribute(`disabled`, `disabled`);
+
+      // commentsCount.innerHTML = +commentsCount.innerHTML - 1;
+    }
   }
 
   setCommentsDeleteHandler(callback) {
-    this._commentDeleteCallback = callback;
+    this._commentDeletingClick = callback;
 
     const element = this.getElement();
 
-    element.querySelectorAll(`.film-details__comment-delete`).forEach((comment) => {
-      comment.addEventListener(`click`, this._deleteClickHandler);
+    element.querySelectorAll(`.film-details__comment`).forEach((comment) => {
+      comment.addEventListener(`click`, (evt) => {
+        this._currentDeletingComment = comment;
+        this._deleteClickHandler(evt);
+      });
     });
+  }
+
+  setDeleteErrorHandler() {
+    this._currentDeletingComment.style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this._currentDeletingComment.style.animation = ``;
+      this._currentDeleteButton.removeAttribute(`disabled`);
+      this._currentDeleteButton.innerHTML = `Delete`;
+    }, ERROR_ANIMATION_TIMEOUT);
+  }
+
+  setFormErrorHandler() {
+    this.getElement().style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().style.animation = ``;
+      this.getElement().querySelector(`.film-details__wrapper`).removeAttribute(`disabled`);
+    }, ERROR_ANIMATION_TIMEOUT);
   }
 
   _closeButtonClickHandler() {
