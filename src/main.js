@@ -6,7 +6,7 @@ import FilmsListPresenter from "./presenter/films-list.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 import FiltersPresenter from "./presenter/filter";
-import Api from "./api.js";
+import Api from "./api/api.js";
 import {AUTHORIZATION, END_POINT, UpdateType} from "./consts.js";
 
 const siteHeaderElement = document.querySelector(`header`);

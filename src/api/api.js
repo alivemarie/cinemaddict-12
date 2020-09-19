@@ -1,5 +1,5 @@
-import FilmsModel from "./model/films.js";
-import {Method, apiHeaders, SuccessHTTPStatusRange} from "./consts";
+import FilmsModel from "../model/films.js";
+import {Method, apiHeaders, SuccessHTTPStatusRange} from "../consts";
 
 export default class Api {
   constructor(endPoint, authorization) {
