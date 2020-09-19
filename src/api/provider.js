@@ -19,6 +19,10 @@ export default class Provider {
     this._store = store;
   }
 
+  getComments(filmId) {
+    return this._api.getComments(filmId);
+  }
+
   getFilms() {
     if (Provider.isOnline()) {
       return this._api.getFilms()
