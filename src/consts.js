@@ -86,3 +86,9 @@ export const SuccessHTTPStatusRange = {
   MIN: 200,
   MAX: 299,
 };
+
+// sw consts
+
+const STORE_PREFIX = `taskmanager-localstorage`;
+const STORE_VER = `v12`;
+export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;

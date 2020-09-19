@@ -9,7 +9,7 @@ self.addEventListener(`install`, (evt) => {
   evt.waitUntil(
     caches.open(CACHE_NAME)
       .then((cache) => {
-        return cache.addAll(
+        return cache.addAll([
           `/`,
           `/index.html`,
           `/bundle.js`,
@@ -29,7 +29,7 @@ self.addEventListener(`install`, (evt) => {
           `/images/posters/the-dance-of-life.jpg`,
           `/images/posters/the-great-flamarion.jpg`,
           `/images/posters/the-man-with-the-golden-arm.jpg`
-        );
+        ]);
       })
   );
 });
