@@ -1,6 +1,10 @@
 import moment from "moment";
 import momentDurationFormatSetup from 'moment-duration-format';
 
+const getUserRating = (films) => {
+  return films.filter((film) => film.isMarkedAsWatched).length;
+};
+
 const showYearFromDate = (date) => {
   return moment(date).format(`YYYY`);
 };
@@ -21,4 +25,4 @@ const showCommentDate = (date) => {
 const sortFilmsByDate = (a, b) => b.releaseDate.getTime() - a.releaseDate.getTime();
 const sortFilmsByRating = (a, b) => b.rating - a.rating;
 
-export {showYearFromDate, showFullReleaseDate, showFilmDuration, showCommentDate, sortFilmsByRating, sortFilmsByDate};
+export {getUserRating, showYearFromDate, showFullReleaseDate, showFilmDuration, showCommentDate, sortFilmsByRating, sortFilmsByDate};

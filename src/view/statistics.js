@@ -3,7 +3,7 @@ import {matchRatingWithRank} from "./profile.js";
 import {FilterType} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import moment from "moment";
-import {getUserRating} from "../mock/user.js";
+import {getUserRating} from "../utils/film.js";
 import {renderChart} from "../utils/chart.js";
 
 const TimeFilter = {
@@ -69,7 +69,7 @@ const createStatisticFilterTemplate = (statisticFilter, isChecked) => {
 
   return (
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${label}" value="${label}" ${isChecked ? `checked` : ``}>
-    <label for="statistic-${label}" class="statistic__filters-label for="statistic-${label}">${name}</label>`
+    <label for="statistic-${label}" class="statistic__filters-label" for="statistic-${label}">${name}</label>`
   );
 };
 

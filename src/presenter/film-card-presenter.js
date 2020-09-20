@@ -1,5 +1,5 @@
-import FilmCardView from "../view/film-card.js";
-import FilmDetailsView from "../view/film-details";
+import FilmCard from "../view/film-card.js";
+import FilmDetails from "../view/film-details";
 import {render, remove, replace} from "../utils/render.js";
 import {UserAction, UpdateType} from "../consts.js";
 
@@ -13,7 +13,7 @@ export const Error = {
   DELETING: `DELETING`
 };
 
-export default class FilmCard {
+export default class FilmCardPresenter {
   constructor(filmsContainer, changeData, resetFilmCardDetailsPopups, api) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
@@ -39,7 +39,7 @@ export default class FilmCard {
     const prevFilmCardComponent = this._filmCardComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
 
-    this._filmCardComponent = new FilmCardView(this._film);
+    this._filmCardComponent = new FilmCard(this._film);
 
     this._filmCardComponent.setFilmCommentsClickHandler(this._handleCommentsClick);
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -148,7 +148,7 @@ export default class FilmCard {
 
   _renderFilmDetailsComponent() {
     this._resetFilmCardDetailsPopups();
-    this._filmDetailsComponent = new FilmDetailsView(this._film);
+    this._filmDetailsComponent = new FilmDetails(this._film);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
 
     this._filmDetailsComponent.setCommentsDeleteHandler(this._handleDeleteCommentClick);

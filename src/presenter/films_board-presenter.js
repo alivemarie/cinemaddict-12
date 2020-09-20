@@ -8,7 +8,7 @@ import {render, remove, getMostCommentedFilms, getTopRatedFilms} from "../utils/
 import {UpdateType} from "../consts.js";
 import {sortFilmsByRating, sortFilmsByDate} from "../utils/film.js";
 import {SortType} from '../consts.js';
-import FilmCardPresenter, {Error as FilmPresenterError} from "./film-card.js";
+import FilmCardPresenter, {Error as FilmPresenterError} from "./film-card-presenter.js";
 import {filter} from "../utils/filter.js";
 import {UserAction} from "../consts.js";
 const FILM_COUNT_PER_STEP = 5;
@@ -21,7 +21,7 @@ const EXTRA_FILMS = {
   MOST_COMMENTED: `Most commented`,
 };
 
-export default class FilmsList {
+export default class FilmsBoardPresenter {
   constructor(mainContainer, filmsModel, filterModel, api) {
     this._mainContainer = mainContainer;
     this._filmsModel = filmsModel;
@@ -94,8 +94,8 @@ export default class FilmsList {
 
   _handleFilmCardChange(updateFilm, userAction, updateType, updateComment) {
     if (userAction === UserAction.REMOVE_COMMENT) {
-      this._api.deleteComment(updateComment).then(() => {
-        this._filmsModel.deleteComment(updateType, updateFilm, updateComment);
+      this._api.removeComment(updateComment).then(() => {
+        this._filmsModel.removeComment(updateType, updateFilm, updateComment);
       }).catch(() => {
         this._filmCardPresenter[updateFilm.id].setErrorHandler(FilmPresenterError.DELETING);
       });

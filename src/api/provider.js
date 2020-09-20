@@ -52,6 +52,14 @@ export default class Provider {
     return Promise.resolve(film);
   }
 
+  addComment(film, comment) {
+    return this._api.addComment(film, comment);
+  }
+
+  deleteComment(commentID) {
+    return this._api.deleteComment(commentID);
+  }
+
   sync() {
     if (Provider.isOnline()) {
       const storeFilms = Object.values(this._store.getItems());

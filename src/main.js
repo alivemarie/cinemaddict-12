@@ -1,11 +1,11 @@
 import ProfileView from "./view/profile.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import {render, RenderPosition} from "./utils/render.js";
-import {getUserRating} from "./mock/user.js";
-import FilmsListPresenter from "./presenter/films-list.js";
+import {getUserRating} from "./utils/film.js";
+import FilmsBoardPresenter from "./presenter/films_board-presenter.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
-import FiltersPresenter from "./presenter/filter";
+import FiltersPresenter from "./presenter/filter.js";
 import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
@@ -21,10 +21,10 @@ const apiWithProvider = new Provider(api, store);
 
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
-const filmsListPresenter = new FilmsListPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider);
-const filtersPresenter = new FiltersPresenter(siteMainElement, filterModel, filmsModel, filmsListPresenter);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider);
+const filtersPresenter = new FiltersPresenter(siteMainElement, filterModel, filmsModel, filmsBoardPresenter);
 
-filmsListPresenter.init();
+filmsBoardPresenter.init();
 
 apiWithProvider.getFilms()
   .then((films) => {
@@ -44,9 +44,7 @@ apiWithProvider.getFilms()
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`./sw.js`)
-    .then(() => {
-      console.log(`ServiceWorker available`); // eslint-disable-line
-    }).catch(() => {
+    .then(() => {}).catch(() => {
     console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
 });
