@@ -107,7 +107,7 @@ export default class FilmsBoardPresenter {
       this._extraFilmsMostCommentedComponent,
       this._extraFilmsTopRatedComponent];
 
-    for (let component of removedComponents) {
+    for (const component of removedComponents) {
       remove(component);
     }
   }

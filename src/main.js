@@ -1,6 +1,6 @@
 import ProfileView from "./view/profile.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
-import {render, RenderPosition} from "./utils/render.js";
+import {render} from "./utils/render.js";
 import {getUserRating} from "./utils/film.js";
 import FilmsBoardPresenter from "./presenter/films-board-presenter.js";
 import FilmsModel from "./model/films.js";
