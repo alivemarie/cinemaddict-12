@@ -143,24 +143,6 @@ export default class StatisticsView extends AbstractComponentView {
     this._showChart(this._allWatchedFilms, this._ctx);
   }
 
-  _showChart(films, ctx) {
-    this._totalGenresNumber = getTotalGenresNumber(films).length;
-    this._labels = getFilmsNumberByGenres(films).map((genre) => genre.genre);
-    this._data = getFilmsNumberByGenres(films).map((genre) => genre.count);
-    renderChart(films, ctx, this._totalGenresNumber, this._labels, this._data);
-  }
-
-  _changePeriodClickHandler(evt) {
-    evt.preventDefault();
-    this._currentTimeFilter = evt.target.value;
-    this._filmsByPeriod = getWatchedFilmsByPeriod(this._films, this._currentTimeFilter);
-    this.updateElement();
-  }
-
-  setPeriodClickHandler() {
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._changePeriodClickHandler);
-  }
-
   getTemplate() {
     return createStatisticsTemplate(getWatchedFilmsByPeriod(this._films, this._currentTimeFilter), this._currentTimeFilter);
   }
@@ -182,5 +164,23 @@ export default class StatisticsView extends AbstractComponentView {
   restoreHandlers() {
     this.setPeriodClickHandler();
     this._ctx = this.getElement().querySelector(`.statistic__chart`);
+  }
+
+  setPeriodClickHandler() {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._changePeriodClickHandler);
+  }
+
+  _showChart(films, ctx) {
+    this._totalGenresNumber = getTotalGenresNumber(films).length;
+    this._labels = getFilmsNumberByGenres(films).map((genre) => genre.genre);
+    this._data = getFilmsNumberByGenres(films).map((genre) => genre.count);
+    renderChart(films, ctx, this._totalGenresNumber, this._labels, this._data);
+  }
+
+  _changePeriodClickHandler(evt) {
+    evt.preventDefault();
+    this._currentTimeFilter = evt.target.value;
+    this._filmsByPeriod = getWatchedFilmsByPeriod(this._films, this._currentTimeFilter);
+    this.updateElement();
   }
 }

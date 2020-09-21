@@ -76,6 +76,12 @@ export default class FilmCardPresenter {
     }
   }
 
+  resetDetails() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closeDetails();
+    }
+  }
+
   setErrorHandler(error) {
     if (error === Error.ADDING) {
       this._filmDetailsComponent.setFormErrorHandler();
@@ -85,65 +91,10 @@ export default class FilmCardPresenter {
     }
   }
 
-  _handleFavoriteClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._film,
-            {
-              isFavorite: !this._film.isFavorite
-            }
-        ),
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH
-    );
-  }
-
-  _handleWatchedClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._film,
-            {
-              isMarkedAsWatched: !this._film.isMarkedAsWatched
-            }
-        ),
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH
-    );
-  }
-
-  _handleAddToWatchlistClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._film,
-            {
-              isAddedToWatchlist: !this._film.isAddedToWatchlist
-            }
-        ),
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH
-    );
-  }
-
-  resetDetails() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._closeDetails();
-    }
-  }
-
   _closeDetails() {
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
-  }
-
-  _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      this._closeDetails();
-    }
   }
 
   _renderFilmDetailsComponent() {
@@ -160,6 +111,13 @@ export default class FilmCardPresenter {
     render(this._bodyElement, this._filmDetailsComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DETAILS;
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      this._closeDetails();
+    }
   }
 
   _handleFormSubmit(emoji, commentText) {
@@ -213,5 +171,47 @@ export default class FilmCardPresenter {
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              isFavorite: !this._film.isFavorite
+            }
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
+    );
+  }
+
+  _handleWatchedClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              isMarkedAsWatched: !this._film.isMarkedAsWatched
+            }
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
+    );
+  }
+
+  _handleAddToWatchlistClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              isAddedToWatchlist: !this._film.isAddedToWatchlist
+            }
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
+    );
   }
 }

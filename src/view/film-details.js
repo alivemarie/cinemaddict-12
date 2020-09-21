@@ -210,11 +210,6 @@ export default class FilmDetails extends AbstractComponentView {
   constructor(filmDetails) {
     super();
     this._filmDetails = filmDetails;
-    this._option = {
-      isFavorite: this._filmDetails.isFavorite,
-      isWatched: this._filmDetails.isMarkedAsWatched,
-      isAddedToWatchlist: this._filmDetails.isAddedToWatchlist
-    };
 
     this._selectEmojiHandler = this._selectEmojiHandler.bind(this);
     this._closeButtonClickHandler = this._closeButtonClickHandler.bind(this);
@@ -235,7 +230,6 @@ export default class FilmDetails extends AbstractComponentView {
     const isFavoriteToggleHandler = (evt) => {
       evt.preventDefault();
 
-      this._option.isFavorite = !this._option.isFavorite;
       changeData(
           Object.assign(
               {},
@@ -260,7 +254,6 @@ export default class FilmDetails extends AbstractComponentView {
     const isWatchedToggleHandler = (evt) => {
       evt.preventDefault();
 
-      this._option.isWatched = !this._option.isWatched;
       changeData(
           Object.assign(
               {},
@@ -285,7 +278,6 @@ export default class FilmDetails extends AbstractComponentView {
     const addToWatchlistToggleHandler = (evt) => {
       evt.preventDefault();
 
-      this._option.isAddedToWatchlist = !this._option.isAddedToWatchlist;
       changeData(
           Object.assign(
               {},
@@ -304,32 +296,53 @@ export default class FilmDetails extends AbstractComponentView {
       .addEventListener(`click`, addToWatchlistToggleHandler);
   }
 
+  setCommentSubmitHandler(callback) {
+    this._formSubmit = callback;
+    this._commentSubmitHandler();
+  }
+
+  setDeleteErrorHandler() {
+    this._currentDeletingComment.style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this._currentDeletingComment.style.animation = ``;
+      this._currentDeleteButton.disabled = false;
+      this._currentDeleteButton.innerHTML = `Delete`;
+    }, ERROR_ANIMATION_TIMEOUT);
+  }
+
+  setFormErrorHandler() {
+    this.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
+    setTimeout(() => {
+      this.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
+      this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
+    }, ERROR_ANIMATION_TIMEOUT);
+  }
+
+  setCommentsDeleteHandler(callback) {
+    this._commentDeletingClick = callback;
+
+    const element = this.getElement();
+
+    element.querySelectorAll(`.film-details__comment`).forEach((comment) => {
+      comment.addEventListener(`click`, (evt) => {
+        this._currentDeletingComment = comment;
+        this._deleteClickHandler(evt);
+      });
+    });
+  }
+
+  setCloseButtonClickHandler(callback) {
+    this._callback.click = callback;
+    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
+  }
+
   _setSelectEmojiHandler() {
     this.getElement().querySelector(`.film-details__emoji-list`)
       .addEventListener(`click`, this._selectEmojiHandler);
   }
 
-  _selectEmojiHandler(evt) {
-    const emoji = evt.target.value;
-    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
-    if (emoji) {
-      emojiContainer.innerHTML = `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
-      this._emoji = emoji;
-    }
-  }
-
   _setCommentTextInputHandler() {
     this.getElement().querySelector(`.film-details__comment-input`).addEventListener(`input`, this._inputTextCommentHandler);
-  }
-
-  _inputTextCommentHandler(evt) {
-    evt.preventDefault();
-    this._commentText = evt.target.value;
-  }
-
-  setCommentSubmitHandler(callback) {
-    this._formSubmit = callback;
-    this._commentSubmitHandler();
   }
 
   _commentSubmitHandler() {
@@ -365,42 +378,21 @@ export default class FilmDetails extends AbstractComponentView {
     }
   }
 
-  setCommentsDeleteHandler(callback) {
-    this._commentDeletingClick = callback;
-
-    const element = this.getElement();
-
-    element.querySelectorAll(`.film-details__comment`).forEach((comment) => {
-      comment.addEventListener(`click`, (evt) => {
-        this._currentDeletingComment = comment;
-        this._deleteClickHandler(evt);
-      });
-    });
-  }
-
-  setDeleteErrorHandler() {
-    this._currentDeletingComment.style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
-      this._currentDeletingComment.style.animation = ``;
-      this._currentDeleteButton.disabled = false;
-      this._currentDeleteButton.innerHTML = `Delete`;
-    }, ERROR_ANIMATION_TIMEOUT);
-  }
-
-  setFormErrorHandler() {
-    this.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
-    setTimeout(() => {
-      this.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
-      this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
-    }, ERROR_ANIMATION_TIMEOUT);
-  }
-
   _closeButtonClickHandler() {
     this._callback.click();
   }
 
-  setCloseButtonClickHandler(callback) {
-    this._callback.click = callback;
-    this.getElement().querySelector(`.film-details__close-btn`).addEventListener(`click`, this._closeButtonClickHandler);
+  _selectEmojiHandler(evt) {
+    const emoji = evt.target.value;
+    const emojiContainer = this.getElement().querySelector(`.film-details__add-emoji-label`);
+    if (emoji) {
+      emojiContainer.innerHTML = `<img src="./images/emoji/${emoji}.png" width="55" height="55" alt="emoji">`;
+      this._emoji = emoji;
+    }
+  }
+
+  _inputTextCommentHandler(evt) {
+    evt.preventDefault();
+    this._commentText = evt.target.value;
   }
 }

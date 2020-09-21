@@ -19,7 +19,6 @@ export default class Navigation extends AbstractComponentView {
 
     this._data = data;
     this._currentFilter = currentFilterType;
-    this._filterTypeChangeHandler = this._filterTypeChangeHandler.bind(this);
     this._menuClickHandler = this._menuClickHandler.bind(this);
   }
 
@@ -27,18 +26,12 @@ export default class Navigation extends AbstractComponentView {
     return createNavigationTemplate(this._data, this._currentFilter);
   }
 
-  _filterTypeChangeHandler(evt) {
-    if (evt.target.tagName !== `A`) {
-      return;
-    }
-    evt.preventDefault();
-    this._callback(evt.target.dataset.filterType);
-  }
-
-  setFiltersTypeChangeHandler(callback) {
-    this._callback = callback;
+  setMenuClickHandler(callback) {
+    this._callback.menuClick = callback;
+    this.getElement().querySelector(`.main-navigation__additional`)
+      .addEventListener(`click`, this._menuClickHandler);
     this.getElement().querySelector(`.main-navigation__items`)
-      .addEventListener(`click`, this._filterTypeChangeHandler);
+      .addEventListener(`click`, this._menuClickHandler);
   }
 
   _menuClickHandler(evt) {
@@ -48,13 +41,5 @@ export default class Navigation extends AbstractComponentView {
     evt.preventDefault();
     this._callback.menuClick(evt.target.dataset.boardType, evt.target.dataset.filterType);
 
-  }
-
-  setMenuClickHandler(callback) {
-    this._callback.menuClick = callback;
-    this.getElement().querySelector(`.main-navigation__additional`)
-      .addEventListener(`click`, this._menuClickHandler);
-    this.getElement().querySelector(`.main-navigation__items`)
-      .addEventListener(`click`, this._menuClickHandler);
   }
 }
