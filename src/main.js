@@ -2,7 +2,7 @@ import ProfileView from "./view/profile.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import {render, RenderPosition} from "./utils/render.js";
 import {getUserRating} from "./utils/film.js";
-import FilmsBoardPresenter from "./presenter/films_board-presenter.js";
+import FilmsBoardPresenter from "./presenter/films-board-presenter.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
 import FiltersPresenter from "./presenter/filter.js";
