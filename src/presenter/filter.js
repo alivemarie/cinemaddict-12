@@ -4,6 +4,7 @@ import {filter} from "../utils/filter.js";
 import {FilterType, UpdateType, MenuMode} from "../consts.js";
 import StatisticsView from "../view/statistics";
 import {SortType} from "../consts";
+import {matchRatingWithRank} from "../view/profile";
 
 export default class FiltersPresenter {
   constructor(container, filtersModel, filmsModel, filmsListPresenter) {
@@ -39,14 +40,24 @@ export default class FiltersPresenter {
 
     replace(this._filtersComponent, prevFiltersComponent);
     remove(prevFiltersComponent);
+
+    this._updateUserRating();
   }
 
   destroy() {
     remove(this._filtersComponent);
   }
 
-  getWatchedCount() {
+  _getWatchedCount() {
     return this._getFilters().watched.count;
+  }
+
+  _updateUserRating() {
+    const watchedFilms = this._getWatchedCount();
+    const userRatingElement = document.querySelector(`.profile__rating`);
+    if (userRatingElement) {
+      userRatingElement.innerHTML = matchRatingWithRank(watchedFilms);
+    }
   }
 
   _getFilters() {
