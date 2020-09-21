@@ -30,7 +30,7 @@ export const MenuMode = {
 
 // servers consts
 
-export const AUTHORIZATION = `Basic tralalala`; // `Basic fmsldfn4r3nfsda`, `Basic fmsl423432nda`
+export const AUTHORIZATION = `Basic bmlsdmfsfspppq`; // `Basic fmsldfn4r3nfsda`, `Basic fmsl423432nda`, `Basic tralalala`
 export const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 export const apiHeaders = {"Content-Type": `application/json`};
@@ -50,5 +50,5 @@ export const SuccessHTTPStatusRange = {
 // sw consts
 
 const STORE_PREFIX = `taskmanager-localstorage`;
-const STORE_VER = `v12`;
+const STORE_VER = `v13`;
 export const STORE_NAME = `${STORE_PREFIX}-${STORE_VER}`;

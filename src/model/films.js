@@ -84,7 +84,7 @@ export default class FilmsModel extends Observer {
     this._notify(updateType, update);
   }
 
-  deleteComment(updateType, updateFilm) {
+  removeComment(updateType, updateFilm) {
     const filmIndex = this._films.findIndex((film) => film.id === updateFilm.id);
     if (filmIndex === -1) {
       throw new Error(`Can't update unexisting films`);

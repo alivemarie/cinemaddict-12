@@ -29,15 +29,14 @@ filmsBoardPresenter.init();
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
-    filtersPresenter.init();
-    render(footerStatistics, new FooterStatisticsView(films.length), RenderPosition.AFTERBEGIN);
-    const userRating = getUserRating(filmsModel.getFilms());
-    render(siteHeaderElement, new ProfileView(userRating));
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
+  }).finally(() => {
     filtersPresenter.init();
-    render(footerStatistics, new FooterStatisticsView(`No`));
+    const footerStatisticsComponent = filmsModel.getFilms().length > 0
+      ? new FooterStatisticsView(filmsModel.getFilms().length) : new FooterStatisticsView(`No`);
+    render(footerStatistics, footerStatisticsComponent);
     const userRating = getUserRating(filmsModel.getFilms());
     render(siteHeaderElement, new ProfileView(userRating));
   });
