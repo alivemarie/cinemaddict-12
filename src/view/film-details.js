@@ -311,9 +311,10 @@ export default class FilmDetails extends AbstractComponentView {
   }
 
   setFormErrorHandler() {
-    this.getElement().querySelector(`.film-details__new-comment`).style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
+    const commentFormElement = this.getElement().querySelector(`.film-details__new-comment`);
+    commentFormElement.style.animation = `shake ${ERROR_ANIMATION_TIMEOUT / 1000}s`;
     setTimeout(() => {
-      this.getElement().querySelector(`.film-details__new-comment`).style.animation = ``;
+      commentFormElement.style.animation = ``;
       this.getElement().querySelector(`.film-details__comment-input`).disabled = false;
     }, ERROR_ANIMATION_TIMEOUT);
   }

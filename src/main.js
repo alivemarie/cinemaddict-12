@@ -44,7 +44,7 @@ apiWithProvider.getFilms()
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`./sw.js`)
     .then(() => {}).catch(() => {
-    console.error(`ServiceWorker isn't available`); // eslint-disable-line
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
 });
 
