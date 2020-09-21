@@ -70,7 +70,7 @@ export const MenuMode = {
 
 // servers consts
 
-export const AUTHORIZATION = `Basic fmsldfn4r3nfsda`;
+export const AUTHORIZATION = `Basic tralalala`; // `Basic fmsldfn4r3nfsda`, `Basic fmsl423432nda`
 export const END_POINT = `https://12.ecmascript.pages.academy/cinemaddict`;
 
 export const apiHeaders = {"Content-Type": `application/json`};

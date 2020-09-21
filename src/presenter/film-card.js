@@ -1,10 +1,16 @@
 import FilmCardView from "../view/film-card.js";
 import FilmDetailsView from "../view/film-details";
 import {render, remove, replace} from "../utils/render.js";
+import {UserAction, UpdateType} from "../consts.js";
 
 const Mode = {
   DEFAULT: `DEFAULT`,
   DETAILS: `DETAILS`
+};
+
+export const Error = {
+  ADDING: `ADDING`,
+  DELETING: `DELETING`
 };
 
 export default class FilmCard {
@@ -21,6 +27,8 @@ export default class FilmCard {
     this._handleFavoriteClick = this._handleFavoriteClick.bind(this);
     this._handleWatchedClick = this._handleWatchedClick.bind(this);
     this._handleAddToWatchlistClick = this._handleAddToWatchlistClick.bind(this);
+    this._handleDeleteCommentClick = this._handleDeleteCommentClick.bind(this);
+    this._handleFormSubmit = this._handleFormSubmit.bind(this);
     this._escKeyDownHandler = this._escKeyDownHandler.bind(this);
     this._handleCommentsClick = this._handleCommentsClick.bind(this);
     this._handleCloseButtonClick = this._handleCloseButtonClick.bind(this);
@@ -37,7 +45,6 @@ export default class FilmCard {
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
     this._filmCardComponent.setWatchedClickHandler(this._handleWatchedClick);
     this._filmCardComponent.setAddToWatchlistClickHandler(this._handleAddToWatchlistClick);
-
     if (prevFilmCardComponent === null) {
       render(this._filmsContainer, this._filmCardComponent);
       return;
@@ -45,6 +52,7 @@ export default class FilmCard {
 
     if (this._filmsContainer.contains(prevFilmCardComponent.getElement())) {
       replace(this._filmCardComponent, prevFilmCardComponent);
+
     }
 
     if (prevFilmDetailsComponent) {
@@ -68,6 +76,15 @@ export default class FilmCard {
     }
   }
 
+  setErrorHandler(error) {
+    if (error === Error.ADDING) {
+      this._filmDetailsComponent.setFormErrorHandler();
+    }
+    if (error === Error.DELETING) {
+      this._filmDetailsComponent.setDeleteErrorHandler();
+    }
+  }
+
   _handleFavoriteClick() {
     this._changeData(
         Object.assign(
@@ -76,7 +93,9 @@ export default class FilmCard {
             {
               isFavorite: !this._film.isFavorite
             }
-        )
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
     );
   }
 
@@ -88,7 +107,9 @@ export default class FilmCard {
             {
               isMarkedAsWatched: !this._film.isMarkedAsWatched
             }
-        )
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
     );
   }
 
@@ -100,7 +121,9 @@ export default class FilmCard {
             {
               isAddedToWatchlist: !this._film.isAddedToWatchlist
             }
-        )
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
     );
   }
 
@@ -127,15 +150,46 @@ export default class FilmCard {
     this._resetFilmCardDetailsPopups();
     this._filmDetailsComponent = new FilmDetailsView(this._film);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
+
+    this._filmDetailsComponent.setCommentsDeleteHandler(this._handleDeleteCommentClick);
+    this._filmDetailsComponent.setCommentSubmitHandler(this._handleFormSubmit);
     this._filmDetailsComponent.enableIsWatchedToggler(this._changeData);
     this._filmDetailsComponent.enableIsFavoriteToggler(this._changeData);
     this._filmDetailsComponent.enableIsAddedToWatchlistToggler(this._changeData);
 
-    // this._filmDetailsComponent.setCommentsDeleteHandler(this._api.deleteComment);
-
     render(this._bodyElement, this._filmDetailsComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DETAILS;
+  }
+
+  _handleFormSubmit(emoji, commentText) {
+    const newComment = {
+      emotion: emoji,
+      date: new Date(),
+      comment: commentText,
+    };
+    this._changeData(
+        this._film,
+        UserAction.ADD_COMMENT,
+        UpdateType.PATCH,
+        newComment
+    );
+  }
+
+  _handleDeleteCommentClick(commentId) {
+    const index = this._film.commentsIds.findIndex((comment) => comment === commentId);
+    this._changeData(
+        Object.assign({}, this._film, {
+          comments: [...this._film.comments.slice(0, index),
+            ...this._film.comments.slice(index + 1)],
+          commentsIds: [...this._film.commentsIds.slice(0, index),
+            ...this._film.commentsIds.slice(index + 1)]
+        }),
+        UserAction.REMOVE_COMMENT,
+        UpdateType.PATCH,
+        commentId
+    );
+
   }
 
   _handleCommentsClick() {
