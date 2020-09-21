@@ -1,5 +1,5 @@
-import FilmCardView from "../view/film-card.js";
-import FilmDetailsView from "../view/film-details";
+import FilmCard from "../view/film-card.js";
+import FilmDetails from "../view/film-details";
 import {render, remove, replace} from "../utils/render.js";
 import {UserAction, UpdateType} from "../consts.js";
 
@@ -13,7 +13,7 @@ export const Error = {
   DELETING: `DELETING`
 };
 
-export default class FilmCard {
+export default class FilmCardPresenter {
   constructor(filmsContainer, changeData, resetFilmCardDetailsPopups, api) {
     this._filmsContainer = filmsContainer;
     this._changeData = changeData;
@@ -39,7 +39,7 @@ export default class FilmCard {
     const prevFilmCardComponent = this._filmCardComponent;
     const prevFilmDetailsComponent = this._filmDetailsComponent;
 
-    this._filmCardComponent = new FilmCardView(this._film);
+    this._filmCardComponent = new FilmCard(this._film);
 
     this._filmCardComponent.setFilmCommentsClickHandler(this._handleCommentsClick);
     this._filmCardComponent.setFavoriteClickHandler(this._handleFavoriteClick);
@@ -76,6 +76,12 @@ export default class FilmCard {
     }
   }
 
+  resetDetails() {
+    if (this._mode !== Mode.DEFAULT) {
+      this._closeDetails();
+    }
+  }
+
   setErrorHandler(error) {
     if (error === Error.ADDING) {
       this._filmDetailsComponent.setFormErrorHandler();
@@ -85,70 +91,15 @@ export default class FilmCard {
     }
   }
 
-  _handleFavoriteClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._film,
-            {
-              isFavorite: !this._film.isFavorite
-            }
-        ),
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH
-    );
-  }
-
-  _handleWatchedClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._film,
-            {
-              isMarkedAsWatched: !this._film.isMarkedAsWatched
-            }
-        ),
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH
-    );
-  }
-
-  _handleAddToWatchlistClick() {
-    this._changeData(
-        Object.assign(
-            {},
-            this._film,
-            {
-              isAddedToWatchlist: !this._film.isAddedToWatchlist
-            }
-        ),
-        UserAction.UPDATE_FILM,
-        UpdateType.PATCH
-    );
-  }
-
-  resetDetails() {
-    if (this._mode !== Mode.DEFAULT) {
-      this._closeDetails();
-    }
-  }
-
   _closeDetails() {
     this._filmDetailsComponent.getElement().remove();
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
   }
 
-  _escKeyDownHandler(evt) {
-    if (evt.key === `Escape` || evt.key === `Esc`) {
-      evt.preventDefault();
-      this._closeDetails();
-    }
-  }
-
   _renderFilmDetailsComponent() {
     this._resetFilmCardDetailsPopups();
-    this._filmDetailsComponent = new FilmDetailsView(this._film);
+    this._filmDetailsComponent = new FilmDetails(this._film);
     this._filmDetailsComponent.setCloseButtonClickHandler(this._handleCloseButtonClick);
 
     this._filmDetailsComponent.setCommentsDeleteHandler(this._handleDeleteCommentClick);
@@ -160,6 +111,13 @@ export default class FilmCard {
     render(this._bodyElement, this._filmDetailsComponent);
     document.addEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DETAILS;
+  }
+
+  _escKeyDownHandler(evt) {
+    if (evt.key === `Escape` || evt.key === `Esc`) {
+      evt.preventDefault();
+      this._closeDetails();
+    }
   }
 
   _handleFormSubmit(emoji, commentText) {
@@ -213,5 +171,47 @@ export default class FilmCard {
     remove(this._filmDetailsComponent);
     document.removeEventListener(`keydown`, this._escKeyDownHandler);
     this._mode = Mode.DEFAULT;
+  }
+
+  _handleFavoriteClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              isFavorite: !this._film.isFavorite
+            }
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
+    );
+  }
+
+  _handleWatchedClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              isMarkedAsWatched: !this._film.isMarkedAsWatched
+            }
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
+    );
+  }
+
+  _handleAddToWatchlistClick() {
+    this._changeData(
+        Object.assign(
+            {},
+            this._film,
+            {
+              isAddedToWatchlist: !this._film.isAddedToWatchlist
+            }
+        ),
+        UserAction.UPDATE_FILM,
+        UpdateType.PATCH
+    );
   }
 }

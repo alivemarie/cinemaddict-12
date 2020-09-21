@@ -55,9 +55,8 @@ export default class Provider {
   addComment(film, comment) {
     return this._api.addComment(film, comment);
   }
-
-  deleteComment(commentID) {
-    return this._api.deleteComment(commentID);
+  removeComment(commentID) {
+    return this._api.removeComment(commentID);
   }
 
   sync() {

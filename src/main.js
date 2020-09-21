@@ -1,11 +1,11 @@
 import ProfileView from "./view/profile.js";
 import FooterStatisticsView from "./view/footer-statistics.js";
 import {render, RenderPosition} from "./utils/render.js";
-import {getUserRating} from "./mock/user.js";
-import FilmsListPresenter from "./presenter/films-list.js";
+import {getUserRating} from "./utils/film.js";
+import FilmsBoardPresenter from "./presenter/films-board-presenter.js";
 import FilmsModel from "./model/films.js";
 import FilterModel from "./model/filter.js";
-import FiltersPresenter from "./presenter/filter";
+import FiltersPresenter from "./presenter/filter.js";
 import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
@@ -21,33 +21,30 @@ const apiWithProvider = new Provider(api, store);
 
 const filmsModel = new FilmsModel();
 const filterModel = new FilterModel();
-const filmsListPresenter = new FilmsListPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider);
-const filtersPresenter = new FiltersPresenter(siteMainElement, filterModel, filmsModel, filmsListPresenter);
+const filmsBoardPresenter = new FilmsBoardPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider);
+const filtersPresenter = new FiltersPresenter(siteMainElement, filterModel, filmsModel, filmsBoardPresenter);
 
-filmsListPresenter.init();
+filmsBoardPresenter.init();
 
 apiWithProvider.getFilms()
   .then((films) => {
     filmsModel.setFilms(UpdateType.INIT, films);
-    filtersPresenter.init();
-    render(footerStatistics, new FooterStatisticsView(films.length), RenderPosition.AFTERBEGIN);
-    const userRating = getUserRating(filmsModel.getFilms());
-    render(siteHeaderElement, new ProfileView(userRating));
   })
   .catch(() => {
     filmsModel.setFilms(UpdateType.INIT, []);
+  }).finally(() => {
     filtersPresenter.init();
-    render(footerStatistics, new FooterStatisticsView(`No`));
+    const footerStatisticsComponent = filmsModel.getFilms().length > 0
+      ? new FooterStatisticsView(filmsModel.getFilms().length) : new FooterStatisticsView(`No`);
+    render(footerStatistics, footerStatisticsComponent);
     const userRating = getUserRating(filmsModel.getFilms());
     render(siteHeaderElement, new ProfileView(userRating));
   });
 
 window.addEventListener(`load`, () => {
   navigator.serviceWorker.register(`./sw.js`)
-    .then(() => {
-      console.log(`ServiceWorker available`); // eslint-disable-line
-    }).catch(() => {
-    console.error(`ServiceWorker isn't available`); // eslint-disable-line
+    .then(() => {}).catch(() => {
+      console.error(`ServiceWorker isn't available`); // eslint-disable-line
     });
 });
 

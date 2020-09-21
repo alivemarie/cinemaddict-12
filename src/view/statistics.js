@@ -3,7 +3,7 @@ import {matchRatingWithRank} from "./profile.js";
 import {FilterType} from "../consts.js";
 import {filter} from "../utils/filter.js";
 import moment from "moment";
-import {getUserRating} from "../mock/user.js";
+import {getUserRating} from "../utils/film.js";
 import {renderChart} from "../utils/chart.js";
 
 const TimeFilter = {
@@ -69,7 +69,7 @@ const createStatisticFilterTemplate = (statisticFilter, isChecked) => {
 
   return (
     `<input type="radio" class="statistic__filters-input visually-hidden" name="statistic-filter" id="statistic-${label}" value="${label}" ${isChecked ? `checked` : ``}>
-    <label for="statistic-${label}" class="statistic__filters-label for="statistic-${label}">${name}</label>`
+    <label for="statistic-${label}" class="statistic__filters-label" for="statistic-${label}">${name}</label>`
   );
 };
 
@@ -143,24 +143,6 @@ export default class StatisticsView extends AbstractComponentView {
     this._showChart(this._allWatchedFilms, this._ctx);
   }
 
-  _showChart(films, ctx) {
-    this._totalGenresNumber = getTotalGenresNumber(films).length;
-    this._labels = getFilmsNumberByGenres(films).map((genre) => genre.genre);
-    this._data = getFilmsNumberByGenres(films).map((genre) => genre.count);
-    renderChart(films, ctx, this._totalGenresNumber, this._labels, this._data);
-  }
-
-  _changePeriodClickHandler(evt) {
-    evt.preventDefault();
-    this._currentTimeFilter = evt.target.value;
-    this._filmsByPeriod = getWatchedFilmsByPeriod(this._films, this._currentTimeFilter);
-    this.updateElement();
-  }
-
-  setPeriodClickHandler() {
-    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._changePeriodClickHandler);
-  }
-
   getTemplate() {
     return createStatisticsTemplate(getWatchedFilmsByPeriod(this._films, this._currentTimeFilter), this._currentTimeFilter);
   }
@@ -182,5 +164,23 @@ export default class StatisticsView extends AbstractComponentView {
   restoreHandlers() {
     this.setPeriodClickHandler();
     this._ctx = this.getElement().querySelector(`.statistic__chart`);
+  }
+
+  setPeriodClickHandler() {
+    this.getElement().querySelector(`.statistic__filters`).addEventListener(`change`, this._changePeriodClickHandler);
+  }
+
+  _showChart(films, ctx) {
+    this._totalGenresNumber = getTotalGenresNumber(films).length;
+    this._labels = getFilmsNumberByGenres(films).map((genre) => genre.genre);
+    this._data = getFilmsNumberByGenres(films).map((genre) => genre.count);
+    renderChart(films, ctx, this._totalGenresNumber, this._labels, this._data);
+  }
+
+  _changePeriodClickHandler(evt) {
+    evt.preventDefault();
+    this._currentTimeFilter = evt.target.value;
+    this._filmsByPeriod = getWatchedFilmsByPeriod(this._films, this._currentTimeFilter);
+    this.updateElement();
   }
 }

@@ -4,6 +4,7 @@ import {filter} from "../utils/filter.js";
 import {FilterType, UpdateType, MenuMode} from "../consts.js";
 import StatisticsView from "../view/statistics";
 import {SortType} from "../consts";
+import {matchRatingWithRank} from "../view/profile";
 
 export default class FiltersPresenter {
   constructor(container, filtersModel, filmsModel, filmsListPresenter) {
@@ -16,12 +17,12 @@ export default class FiltersPresenter {
     this._currentFiltersType = null;
     this._currentMenuMode = MenuMode.FILMS;
     this._handleModelEvent = this._handleModelEvent.bind(this);
-    this._handleFiltersTypeChange = this._handleFiltersTypeChange.bind(this);
     this._handleSiteMenuClick = this._handleSiteMenuClick.bind(this);
 
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filtersModel.addObserver(this._handleModelEvent);
   }
+
   init() {
     this._currentFiltersType = this._filtersModel.getFilter();
 
@@ -30,7 +31,6 @@ export default class FiltersPresenter {
 
     this._filtersComponent = new Navigation(filters, this._currentFiltersType);
 
-    // this._filtersComponent.setFiltersTypeChangeHandler(this._handleFiltersTypeChange);
     this._filtersComponent.setMenuClickHandler(this._handleSiteMenuClick);
 
     if (prevFiltersComponent === null) {
@@ -40,44 +40,24 @@ export default class FiltersPresenter {
 
     replace(this._filtersComponent, prevFiltersComponent);
     remove(prevFiltersComponent);
+
+    this._updateUserRating();
   }
 
-  _handleModelEvent() {
-    this.init();
+  destroy() {
+    remove(this._filtersComponent);
   }
 
-  _handleFiltersTypeChange(filtersType) {
-    if (this._currentFilter === filtersType) {
-      return;
-    }
-    this._filtersModel.setFilter(UpdateType.MAJOR, filtersType);
-  }
-
-  _handleSiteMenuClick(menuItem, filtersType = null) {
-
-    if (menuItem === MenuMode.STATISTICS) {
-      this._currentMenuMode = MenuMode.STATISTICS;
-      this._statisticBoard = new StatisticsView(this._filmsModel.getFilms());
-      this._statisticBoard.setPeriodClickHandler();
-      render(document.querySelector(`main`), this._statisticBoard);
-      this._filmsListPresenter.destroy(true, true);
-    } else {
-      this._currentMenuMode = MenuMode.FILMS;
-      if (this._statisticBoard) {
-        remove(this._statisticBoard);
-      }
-      if (this._currentFilter === filtersType) {
-        return;
-      }
-      this._filmsListPresenter.init(SortType.DEFAULT);
-      this._filtersModel.setFilter(UpdateType.MAJOR, filtersType);
-    }
-
-    this._handleModelEvent();
-  }
-
-  getWatchedCount() {
+  _getWatchedCount() {
     return this._getFilters().watched.count;
+  }
+
+  _updateUserRating() {
+    const watchedFilms = this._getWatchedCount();
+    const userRatingElement = document.querySelector(`.profile__rating`);
+    if (userRatingElement) {
+      userRatingElement.innerHTML = matchRatingWithRank(watchedFilms);
+    }
   }
 
   _getFilters() {
@@ -107,7 +87,29 @@ export default class FiltersPresenter {
     };
   }
 
-  destroy() {
-    remove(this._filtersComponent);
+  _handleModelEvent() {
+    this.init();
+  }
+
+  _handleSiteMenuClick(menuItem, filtersType = null) {
+    if (menuItem === MenuMode.STATISTICS) {
+      this._currentMenuMode = MenuMode.STATISTICS;
+      this._statisticBoard = new StatisticsView(this._filmsModel.getFilms());
+      this._statisticBoard.setPeriodClickHandler();
+      render(document.querySelector(`main`), this._statisticBoard);
+      this._filmsListPresenter.destroy(true, true);
+    } else {
+      this._currentMenuMode = MenuMode.FILMS;
+      if (this._statisticBoard) {
+        remove(this._statisticBoard);
+      }
+      if (this._currentFilter === filtersType) {
+        return;
+      }
+      this._filmsListPresenter.init(SortType.DEFAULT);
+      this._filtersModel.setFilter(UpdateType.MAJOR, filtersType);
+    }
+
+    this._handleModelEvent();
   }
 }
