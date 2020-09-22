@@ -117,6 +117,10 @@ export default class FilmsBoardPresenter {
   }
 
   _renderSort() {
+    const prevSortComponent = this._sortComponent;
+    if (prevSortComponent) {
+      remove(prevSortComponent);
+    }
     this._sortComponent = new SortView(this._currentSortType);
     render(this._mainContainer, this._sortComponent);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
