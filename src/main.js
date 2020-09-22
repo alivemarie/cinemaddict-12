@@ -10,6 +10,7 @@ import Api from "./api/api.js";
 import Store from "./api/store.js";
 import Provider from "./api/provider.js";
 import {AUTHORIZATION, END_POINT, UpdateType, STORE_NAME} from "./consts.js";
+import {SortType} from "./consts";
 
 const siteHeaderElement = document.querySelector(`header`);
 const siteMainElement = document.querySelector(`main`);
@@ -24,7 +25,7 @@ const filterModel = new FilterModel();
 const filmsBoardPresenter = new FilmsBoardPresenter(siteMainElement, filmsModel, filterModel, apiWithProvider);
 const filtersPresenter = new FiltersPresenter(siteMainElement, filterModel, filmsModel, filmsBoardPresenter);
 
-filmsBoardPresenter.init();
+filmsBoardPresenter.init(SortType.DEFAULT);
 
 apiWithProvider.getFilms()
   .then((films) => {

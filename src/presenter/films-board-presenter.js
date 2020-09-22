@@ -33,7 +33,7 @@ export default class FilmsBoardPresenter {
     this._filmTopRatedCardPresenter = {};
     this._filmsListComponent = new FilmsListView();
     this._showMoreButtonComponent = new ShowMoreButtonView();
-    this._sortComponent = new SortView();
+
     this._noFilmComponent = new NoFilmsView();
     this._loadingComponent = new LoadingBarView();
     this._extraFilmsMostCommentedComponent = new ExtraFilmsListView(EXTRA_FILMS.MOST_COMMENTED);
@@ -49,11 +49,11 @@ export default class FilmsBoardPresenter {
   }
 
   init(sortType) {
+    this._currentSortType = sortType;
 
     this._renderFilmsBoard();
-
     this._handleSortTypeChange(sortType);
-    this._currentSortType = sortType;
+
     this._filmsModel.addObserver(this._handleModelEvent);
     this._filterModel.addObserver(this._handleModelEvent);
   }
@@ -117,6 +117,7 @@ export default class FilmsBoardPresenter {
   }
 
   _renderSort() {
+    this._sortComponent = new SortView(this._currentSortType);
     render(this._mainContainer, this._sortComponent);
     this._sortComponent.setSortTypeChangeHandler(this._handleSortTypeChange);
   }
@@ -262,7 +263,7 @@ export default class FilmsBoardPresenter {
     switch (updateType) {
       case UpdateType.INIT:
         this._isLoading = false;
-        remove(this._loadingComponent);
+        this._clearView();
         this._renderFilmsBoard();
         break;
       case UpdateType.MAJOR:
